@@ -23,22 +23,22 @@
         <div class="layui-form-item">
             <label class="layui-form-label">门店名</label>
             <div class="layui-input-block">
-                <input type="text" name="title" required  lay-verify="required" placeholder="请输入门店名" autocomplete="off" class="layui-input" style="width: 50%;">
+                <input type="text" name="title" value="{$info.title}" required  lay-verify="required" placeholder="请输入门店名" autocomplete="off" class="layui-input" style="width: 50%;">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">联系电话</label>
             <div class="layui-input-block">
-                <input type="text" name="tel" required  lay-verify="required" placeholder="请输入联系电话" autocomplete="off" class="layui-input" style="width: 50%;">
+                <input type="text" name="tel" value="{$info.tel}" required  lay-verify="required" placeholder="请输入联系电话" autocomplete="off" class="layui-input" style="width: 50%;">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">门店地址</label>
             <div class="">
-                <select onchange="loadRegion('province',2,'city','{:url('getAddrs')}')" id="province" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
-                    <option value="0" selected>省份/直辖市</option>
+                <select  onchange="loadRegion('province',2,'city','{:url('getAddrs')}')" id="province" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                    <option selected>{$info.province}</option>
                     {volist name="province" id="vo"}
                     <option value="{$vo.id}" >{$vo.name}</option>
                     {/volist}
@@ -46,16 +46,16 @@
             </div>
             <div class="">
                 <select  onchange="loadRegion('city',3,'district','{:url('getAddrs')}')" id="city" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
-                    <option value="0">市/县</option>
+                    <option>{$info.city}</option>
                 </select>
             </div>
             <div class="">
                 <select  id="district" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
-                    <option value="0">镇/区</option>
+                    <option>{$info.area}</option>
                 </select>
             </div>
             <div class="layui-input-inline">
-                <input type="text" name="addr" id="addr" required  lay-verify="required" placeholder="请输入详细地址" autocomplete="off" class="layui-input" >
+                <input type="text" name="addr" value="{$info.addr}" id="addr" required  lay-verify="required" placeholder="请输入详细地址" autocomplete="off" class="layui-input" >
             </div>
             <div class="layui-input-inline" style="margin-left: 10px;width: 90px">
                 <button class="layui-btn" id="search" data-type="reload" onclick="codeAddress()">{:lang('search')}</button>
@@ -64,7 +64,6 @@
         </div>
 
         <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
-
         <div id="container" style="width:90%; height:600px;margin: auto;"></div>
 
 
@@ -74,11 +73,12 @@
                 <a href="{:url('index',['catid'=>input('catid')])}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
             </div>
         </div>
-        <input type="hidden" name="location" value="" id="locate">
-        <input type="hidden" name="province" value="" id="prov">
-        <input type="hidden" name="city" value="" id="citys">
-        <input type="hidden" name="area" value="" id="areas">
-        <input type="hidden" name="addr" value="" id="addrs">
+        <input TYPE="hidden" name="id" value="{$info.id}">
+        <input type="hidden" name="location" value="{$info.location}" id="locate">
+        <input type="hidden" name="province" value="{$info.province}" id="prov">
+        <input type="hidden" name="city" value="{$info.city}" id="citys">
+        <input type="hidden" name="area" value="{$info.area}" id="areas">
+        <input type="hidden" name="addr" value="{$info.addr}" id="addrs">
     </form>
 </div>
 <script src='__STATIC__/plugins/spectrum/spectrum.js'></script>
@@ -98,15 +98,15 @@
             return;
         }
         jQuery.getJSON(url,{pid:jQuery("#"+sel).val(),type:type_id},
-            function(data){
-                if(data){
-                     jQuery.each(data,function(idx,item){
-                         jQuery("<option value="+item.id+">"+item.name+"</option>").appendTo(jQuery("#"+selName));
-                     });
-                }else{
-                     jQuery("<option value='0'>请选择</option>").appendTo(jQuery("#"+selName));
+                function(data){
+                    if(data){
+                        jQuery.each(data,function(idx,item){
+                            jQuery("<option value="+item.id+">"+item.name+"</option>").appendTo(jQuery("#"+selName));
+                        });
+                    }else{
+                        jQuery("<option value='0'>请选择</option>").appendTo(jQuery("#"+selName));
+                    }
                 }
-            }
         );
     }
 </script>
@@ -141,10 +141,10 @@
     }
 
     function codeAddress() {
-       var province = $("#province").find("option:selected").text();
-       var city=$("#city").find("option:selected").text();
-       var area=$("#district").find("option:selected").text();
-       var addr=$("#addr").val();
+        var province = $("#province").find("option:selected").text();
+        var city=$("#city").find("option:selected").text();
+        var area=$("#district").find("option:selected").text();
+        var addr=$("#addr").val();
         var address = "中国,"+province+","+city+","+area+","+addr;
         //通过getLocation();方法获取位置信息值
         geocoder.getLocation(address);
@@ -153,6 +153,7 @@
         $("#areas").attr('value',area);
         $("#addrs").attr('value',addr);
     }
+
     init();
 
     layui.use(['form','upload','layedit','laydate'], function () {

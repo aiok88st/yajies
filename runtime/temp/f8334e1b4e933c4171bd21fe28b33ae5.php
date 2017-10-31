@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:50:"F:\wamp\www\yajie/app/admin\view\networks\add.html";i:1509421448;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1507509539;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:50:"F:\wamp\www\yajie/app/admin\view\networks\add.html";i:1509442349;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1507509539;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,46 +16,6 @@
 </head>
 <body class="skin-0">
 <link rel="stylesheet" href="__STATIC__/plugins/spectrum/spectrum.css">
-<script type="text/javascript">
-    function getProvince(){
-        $.ajax({
-            url:"<?php echo url('getAddrs'); ?>",
-            type:'get',
-            data:'pid=1',
-            success:function(re){
-                $("#province").empty();
-                $("#province").append(re);
-                getCity();
-            }
-        })
-    }
-    function getCity(){
-        var pid=$("#province").val();
-        $.ajax({
-            url:"<?php echo url('getAddrs'); ?>",
-            type:'get',
-            data:'pid='+pid,
-            success:function(re){
-                $("#city").empty();
-                $("#city").append(re);
-                getArea();
-            }
-        })
-    }
-    function getArea(){
-        var cid=$("#city").val();
-        $.ajax({
-            url:"<?php echo url('getAddrs'); ?>",
-            type:'get',
-            data:'pid='+cid,
-            success:function(re){
-                $("#district").empty();
-                $("#district").append(re);
-            }
-        })
-    }
-
-</script>
 <script>
     var ADMIN = '__ADMIN__';
     var UPURL = "<?php echo url('UpFiles/upImages'); ?>";
@@ -76,7 +36,7 @@
     <fieldset class="layui-elem-field layui-field-title">
         <legend><?php echo $title; ?></legend>
     </fieldset>
-    <form class="layui-form" method="post">
+    <form class="layui-form" method="post" target="rfFrame">
 
         <div class="layui-form-item">
             <label class="layui-form-label">门店名</label>
@@ -95,15 +55,21 @@
         <div class="layui-form-item">
             <label class="layui-form-label">门店地址</label>
             <div class="">
-                <select name="province" onchange="getCity()" id="province" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select onchange="loadRegion('province',2,'city','<?php echo url('getAddrs'); ?>')" id="province" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                    <option value="0" selected>省份/直辖市</option>
+                    <?php if(is_array($province) || $province instanceof \think\Collection || $province instanceof \think\Paginator): $i = 0; $__LIST__ = $province;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+                    <option value="<?php echo $vo['id']; ?>" ><?php echo $vo['name']; ?></option>
+                    <?php endforeach; endif; else: echo "" ;endif; ?>
                 </select>
             </div>
             <div class="">
-                <select name="city" onchange="getArea()" id="city" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select  onchange="loadRegion('city',3,'district','<?php echo url('getAddrs'); ?>')" id="city" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                    <option value="0">市/县</option>
                 </select>
             </div>
             <div class="">
-                <select name="area" id="district" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select  id="district" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                    <option value="0">镇/区</option>
                 </select>
             </div>
             <div class="layui-input-inline">
@@ -114,9 +80,8 @@
             </div>
 
         </div>
-        <script type="text/javascript">
-            getProvince();
-        </script>
+
+        <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
 
         <div id="container" style="width:90%; height:600px;margin: auto;"></div>
 
@@ -124,12 +89,14 @@
         <div class="layui-form-item" style="margin-top: 30px">
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" lay-submit="" lay-filter="submit"><?php echo lang('submit'); ?></button>
-
                 <a href="<?php echo url('index',['catid'=>input('catid')]); ?>" class="layui-btn layui-btn-primary"><?php echo lang('back'); ?></a>
-
             </div>
         </div>
         <input type="hidden" name="location" value="" id="locate">
+        <input type="hidden" name="province" value="" id="prov">
+        <input type="hidden" name="city" value="" id="citys">
+        <input type="hidden" name="area" value="" id="areas">
+        <input type="hidden" name="addr" value="" id="addrs">
     </form>
 </div>
 <script src='__STATIC__/plugins/spectrum/spectrum.js'></script>
@@ -138,6 +105,29 @@
 <script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
 
 </head>
+<script>
+    //省市区三级联动
+    function loadRegion(sel,type_id,selName,url){
+        jQuery("#"+selName+" option").each(function(){
+            jQuery(this).remove();
+        });
+        jQuery("<option value=0>请选择</option>").appendTo(jQuery("#"+selName));
+        if(jQuery("#"+sel).val()==0){
+            return;
+        }
+        jQuery.getJSON(url,{pid:jQuery("#"+sel).val(),type:type_id},
+            function(data){
+                if(data){
+                     jQuery.each(data,function(idx,item){
+                         jQuery("<option value="+item.id+">"+item.name+"</option>").appendTo(jQuery("#"+selName));
+                     });
+                }else{
+                     jQuery("<option value='0'>请选择</option>").appendTo(jQuery("#"+selName));
+                }
+            }
+        );
+    }
+</script>
 
 <script>
     var thumb,pic,file;
@@ -176,9 +166,11 @@
         var address = "中国,"+province+","+city+","+area+","+addr;
         //通过getLocation();方法获取位置信息值
         geocoder.getLocation(address);
-
+        $("#prov").attr('value',province);
+        $("#citys").attr('value',city);
+        $("#areas").attr('value',area);
+        $("#addrs").attr('value',addr);
     }
-
     init();
 
     layui.use(['form','upload','layedit','laydate'], function () {

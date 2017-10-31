@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:57:"D:\wamp\wamp64\www\yajie/app/admin\view\content\edit.html";i:1507509540;s:56:"D:\wamp\wamp64\www\yajie/app/admin\view\common\head.html";i:1507509539;s:56:"D:\wamp\wamp64\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:50:"F:\wamp\www\yajie/app/admin\view\content\edit.html";i:1509435321;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1507509539;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,8 +59,8 @@
                 $controller = $controllerName;
                 if($controller == 'Page'){ ?>
                 <!--<a href="<?php echo url('page/edit',['id'=>input('catid')]); ?>" class="layui-btn layui-btn-primary"><?php echo lang('back'); ?></a>-->
-                <?php }elseif($controller == 'Article' && $lang = 1){ ?>
-                <a href="<?php echo url('articles/lists',['catid'=>input('catid')]); ?>" class="layui-btn layui-btn-primary"><?php echo lang('back'); ?></a>
+                <?php }elseif($controller == 'Article'){ ?>
+                <a href="<?php echo url('Article/index',['catid'=>input('catid')]); ?>" class="layui-btn layui-btn-primary"><?php echo lang('back'); ?></a>
                <?php }elseif($controller == 'Enarticle' && $lang = 2){?>
                 <a href="<?php echo url('articles/lists2',['catid'=>input('catid')]); ?>" class="layui-btn layui-btn-primary"><?php echo lang('back'); ?></a>
                 <?php }elseif($controller == 'Product'){ ?>

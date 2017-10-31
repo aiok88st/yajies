@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:58:"F:\wamp\www\yajie/app/admin\view\networks\networkList.html";i:1509366903;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1507509539;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:58:"F:\wamp\www\yajie/app/admin\view\networks\networkList.html";i:1509443434;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1507509539;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,7 +42,7 @@
     {{# if(d.thumb){ }}<img src="__ADMIN__/images/image.gif" onmouseover="layer.tips('<img src=__PUBLIC__/{{d.thumb}}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();">{{# } }}
 </script>
 <script type="text/html" id="action">
-    <a href="<?php echo url('edit'); ?>?id={{d.id}}&catid={{d.catid}}" class="layui-btn layui-btn-mini">编辑</a>
+    <a href="<?php echo url('edit'); ?>?id={{d.id}}" class="layui-btn layui-btn-mini">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
 </script>
 <script>
@@ -59,7 +59,10 @@
                 {checkbox: true, fixed: true},
                 {field: 'id', title: '<?php echo lang("id"); ?>', width: 80, fixed: true},
                 {field: 'title', title: '门店名', width: 300},
-                {field: 'addr', title: '门店地址', width: 400},
+                {field: 'province', title: '省', width: 80},
+                {field: 'city', title: '市', width: 80},
+                {field: 'area', title: '区', width: 80},
+                {field: 'addr', title: '地址', width: 200},
                 {field: 'tel', title: '门店电话', width: 200},
                 {field: 'createtime', title: '<?php echo lang("add"); ?><?php echo lang("time"); ?>', width: 180},
                 {field: 'listorder', align: 'center', title: '<?php echo lang("order"); ?>', width: 120, templet: '#order'},

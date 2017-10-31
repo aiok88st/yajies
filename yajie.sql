@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2017-10-31 11:48:46
+Date: 2017-10-31 17:56:56
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -99,17 +99,20 @@ CREATE TABLE `clt_article` (
   `createtime` int(11) unsigned NOT NULL DEFAULT '0',
   `updatetime` int(11) unsigned NOT NULL DEFAULT '0',
   `copyfrom` varchar(255) NOT NULL DEFAULT 'CLTPHP',
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `contentdes` text NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT '1',
+  `tel` varchar(255) NOT NULL DEFAULT '',
+  `hits` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `status` (`id`,`open`,`listorder`),
   KEY `catid` (`id`,`catid`,`open`),
   KEY `listorder` (`id`,`catid`,`open`,`listorder`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_article
 -- ----------------------------
+INSERT INTO `clt_article` VALUES ('1', '5', '1', 'admin', '哈哈', 'color:;font-weight:normal;', '/uploads/20171031/2a125d8f1112329f15af038806f08246.jpg', '哈哈 哈哈哈', '', '<p>问题：今天天气怎么样？</p><p>答案：不错。</p>', '', '0', '1', '0', '1509434586', '1509435514', 'CLTPHP', '', '1', '10086', '100');
 
 -- ----------------------------
 -- Table structure for clt_auth_group
@@ -149,7 +152,7 @@ CREATE TABLE `clt_auth_rule` (
   `zt` int(1) DEFAULT NULL,
   `menustatus` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=284 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=287 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_auth_rule
@@ -254,6 +257,9 @@ INSERT INTO `clt_auth_rule` VALUES ('279', 'Network', '售后网点', '1', '1', 
 INSERT INTO `clt_auth_rule` VALUES ('281', 'Video', '视频管理', '1', '1', '0', 'icon-video-camera', '', '0', '51', '1509181080', null, '1');
 INSERT INTO `clt_auth_rule` VALUES ('282', 'Category/index', '视频分类', '1', '1', '0', '', '', '281', '50', '1509181201', null, '1');
 INSERT INTO `clt_auth_rule` VALUES ('283', 'Video/index', '视频列表', '1', '1', '0', '', '', '281', '50', '1509181245', null, '1');
+INSERT INTO `clt_auth_rule` VALUES ('284', 'Article', '售后问题', '1', '1', '0', 'icon-list2', '', '0', '52', '1509433389', null, '1');
+INSERT INTO `clt_auth_rule` VALUES ('285', 'Article/index', '售后问题列表', '1', '1', '0', '', '', '284', '2', '1509433478', null, '1');
+INSERT INTO `clt_auth_rule` VALUES ('286', 'Category/index', '文章分类', '1', '1', '0', '', '', '284', '1', '1509434477', null, '1');
 
 -- ----------------------------
 -- Table structure for clt_category
@@ -289,13 +295,15 @@ CREATE TABLE `clt_category` (
   PRIMARY KEY (`id`),
   KEY `parentid` (`parentid`),
   KEY `listorder` (`listorder`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_category
 -- ----------------------------
-INSERT INTO `clt_category` VALUES ('1', '视频分类', 'video_type', '', '0', '19', 'video', '0', '1', '0', '视频分类', '视频分类', '视频分类', '0', '0', '1', '0', '', '0', '', '', '', '0', '1,2', '0', '1');
+INSERT INTO `clt_category` VALUES ('1', '视频分类', 'video_type', '', '0', '19', 'video', '0', '1,3', '0', '视频分类', '视频分类', '视频分类', '0', '0', '1', '0', '', '0', '', '', '', '0', '1,2', '0', '1');
 INSERT INTO `clt_category` VALUES ('3', '视频分类1', 'v1', 'video_type/', '1', '19', 'video', '0,1', '3', '0', '视频分类1', '视频分类1', '视频分类1', '0', '0', '1', '0', '', '0', '', '', '', '0', '1,2', '0', '1');
+INSERT INTO `clt_category` VALUES ('4', '文章分类', 'article', '', '0', '2', 'article', '0', '4', '0', '文章分类', '文章分类', '文章分类', '0', '0', '1', '0', '', '0', '', '', '', '0', '1,2', '0', '1');
+INSERT INTO `clt_category` VALUES ('5', '文章分类1', 'a1', 'article/', '4', '2', 'article', '0,4', '5', '0', '文章分类1', '文章分类1', '文章分类1', '0', '0', '1', '0', '', '0', '', '', '', '0', '1,2', '0', '1');
 
 -- ----------------------------
 -- Table structure for clt_config
@@ -369,7 +377,7 @@ CREATE TABLE `clt_field` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `issystem` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=226 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=228 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_field
@@ -382,13 +390,13 @@ INSERT INTO `clt_field` VALUES ('5', '1', 'status', '状态', '', '0', '0', '0',
 INSERT INTO `clt_field` VALUES ('6', '1', 'content', '内容', '', '0', '0', '0', 'defaul', '', 'content', 'editor', 'array (\n  \'edittype\' => \'UEditor\',\n)', '0', '', '4', '1', '0');
 INSERT INTO `clt_field` VALUES ('7', '2', 'catid', '栏目', '', '1', '1', '6', '', '必须选择一个栏目', '', 'catid', '', '1', '', '1', '1', '1');
 INSERT INTO `clt_field` VALUES ('8', '2', 'title', '标题', '', '1', '1', '80', '', '标题必须为1-80个字符', '', 'title', 'array (\n  \'thumb\' => \'1\',\n  \'style\' => \'1\',\n  \'size\' => \'55\',\n)', '1', '', '2', '1', '1');
-INSERT INTO `clt_field` VALUES ('9', '2', 'keywords', '关键词', '', '0', '0', '80', '', '', '', 'text', 'array (\n  \'size\' => \'55\',\n  \'default\' => \'\',\n  \'ispassword\' => \'0\',\n  \'fieldtype\' => \'varchar\',\n)', '1', '', '3', '0', '1');
+INSERT INTO `clt_field` VALUES ('9', '2', 'keywords', '关键词', '', '0', '0', '80', '', '', '', 'text', 'array (\n  \'size\' => \'55\',\n  \'default\' => \'\',\n  \'ispassword\' => \'0\',\n  \'fieldtype\' => \'varchar\',\n)', '1', '', '3', '1', '1');
 INSERT INTO `clt_field` VALUES ('10', '2', 'description', 'SEO简介', '', '0', '0', '0', '', '', '', 'textarea', 'array (\n  \'fieldtype\' => \'mediumtext\',\n  \'rows\' => \'4\',\n  \'cols\' => \'55\',\n  \'default\' => \'\',\n)', '1', '', '4', '0', '1');
 INSERT INTO `clt_field` VALUES ('11', '2', 'content', '内容', '', '0', '0', '0', 'defaul', '', 'content', 'editor', 'array (\n  \'edittype\' => \'UEditor\',\n)', '1', '', '5', '1', '1');
 INSERT INTO `clt_field` VALUES ('12', '2', 'createtime', '发布时间', '', '1', '0', '0', 'date', '', '', 'datetime', '', '1', '', '7', '1', '1');
-INSERT INTO `clt_field` VALUES ('17', '2', 'posid', '推荐位', '', '0', '0', '0', '', '', '', 'posid', '', '1', '', '14', '1', '1');
-INSERT INTO `clt_field` VALUES ('18', '2', 'template', '模板', '', '0', '0', '0', '', '', '', 'template', '', '1', '', '15', '1', '1');
-INSERT INTO `clt_field` VALUES ('19', '2', 'open', '状态', '', '1', '10', '0', 'defaul', '', 'open', 'radio', 'array (\n  \'options\' => \'发布|1\n定时发布|0\',\n  \'fieldtype\' => \'tinyint\',\n  \'numbertype\' => \'1\',\n  \'default\' => \'1\',\n)', '1', '', '8', '1', '1');
+INSERT INTO `clt_field` VALUES ('17', '2', 'posid', '推荐位', '', '0', '0', '0', '', '', '', 'posid', '', '1', '', '14', '0', '1');
+INSERT INTO `clt_field` VALUES ('18', '2', 'template', '模板', '', '0', '0', '0', '', '', '', 'template', '', '1', '', '15', '0', '1');
+INSERT INTO `clt_field` VALUES ('19', '2', 'open', '状态', '', '1', '10', '0', 'defaul', '', 'open', 'radio', 'array (\n  \'options\' => \'发布|1\n定时发布|0\',\n  \'fieldtype\' => \'tinyint\',\n  \'numbertype\' => \'1\',\n  \'default\' => \'1\',\n)', '1', '', '8', '0', '1');
 INSERT INTO `clt_field` VALUES ('20', '3', 'catid', '栏目', '', '1', '1', '6', '', '必须选择一个栏目', '', 'catid', '', '1', '', '1', '1', '1');
 INSERT INTO `clt_field` VALUES ('21', '3', 'title', '标题', '', '1', '1', '80', 'defaul', '标题必须为1-80个字符', '', 'title', 'array (\n  \'thumb\' => \'0\',\n  \'style\' => \'0\',\n)', '1', '', '2', '1', '1');
 INSERT INTO `clt_field` VALUES ('22', '3', 'keywords', '关键词', '', '0', '0', '80', '', '', '', 'text', 'array (\n  \'size\' => \'55\',\n  \'default\' => \'\',\n  \'ispassword\' => \'0\',\n  \'fieldtype\' => \'varchar\',\n)', '1', '', '3', '1', '1');
@@ -454,13 +462,15 @@ INSERT INTO `clt_field` VALUES ('223', '17', 'city', '市', '', '1', '0', '0', '
 INSERT INTO `clt_field` VALUES ('221', '19', 'contnet', '内容', '', '0', '0', '0', 'defaul', '', 'contnet', 'textarea', 'array (\n  \'fieldtype\' => \'text\',\n  \'default\' => \'\',\n)', '0', '', '6', '1', '0');
 INSERT INTO `clt_field` VALUES ('222', '17', 'province', '省', '', '1', '0', '0', 'defaul', '', 'province', 'text', 'array (\n  \'default\' => \'\',\n  \'ispassword\' => \'0\',\n  \'fieldtype\' => \'varchar\',\n)', '0', '', '0', '1', '0');
 INSERT INTO `clt_field` VALUES ('142', '3', 'images', '图组', '', '0', '0', '0', 'defaul', '', 'images', 'images', '', '0', '', '6', '1', '0');
+INSERT INTO `clt_field` VALUES ('226', '2', 'tel', '服务热线', '', '0', '0', '0', 'defaul', '', 'tel', 'text', 'array (\n  \'default\' => \'\',\n  \'ispassword\' => \'0\',\n  \'fieldtype\' => \'varchar\',\n)', '0', '', '9', '1', '0');
+INSERT INTO `clt_field` VALUES ('227', '2', 'hits', '浏览量', '', '0', '0', '0', 'defaul', '', 'hits', 'number', 'array (\n  \'numbertype\' => \'1\',\n  \'decimaldigits\' => \'0\',\n  \'default\' => \'0\',\n)', '0', '', '10', '1', '0');
 INSERT INTO `clt_field` VALUES ('225', '17', 'location', '坐标', '', '1', '0', '0', 'defaul', '', 'location', 'text', 'array (\n  \'default\' => \'\',\n  \'ispassword\' => \'0\',\n  \'fieldtype\' => \'varchar\',\n)', '0', '', '0', '1', '0');
 INSERT INTO `clt_field` VALUES ('224', '17', 'area', '区', '', '1', '0', '0', 'defaul', '', 'area', 'text', 'array (\n  \'default\' => \'\',\n  \'ispassword\' => \'0\',\n  \'fieldtype\' => \'varchar\',\n)', '0', '', '0', '1', '0');
 INSERT INTO `clt_field` VALUES ('217', '19', 'template', '模板', '', '0', '0', '0', '', '', '', 'template', '', '1', '', '13', '0', '1');
 INSERT INTO `clt_field` VALUES ('216', '19', 'posid', '推荐位', '', '0', '0', '0', '', '', '', 'posid', '', '1', '', '12', '0', '1');
 INSERT INTO `clt_field` VALUES ('218', '19', 'tag', '视频标签', '', '1', '0', '0', 'defaul', '', 'tag', 'select', 'array (\n  \'options\' => \'发布视频|1\n在线视频|2\n视频仓库|3\n热门视频|4\',\n  \'multiple\' => \'0\',\n  \'fieldtype\' => \'varchar\',\n  \'numbertype\' => \'1\',\n  \'size\' => \'\',\n  \'default\' => \'\',\n)', '0', '', '4', '1', '0');
 INSERT INTO `clt_field` VALUES ('163', '1', 'catid', '栏目', '', '1', '0', '0', 'defaul', '', 'catid', 'catid', '', '0', '', '0', '1', '0');
-INSERT INTO `clt_field` VALUES ('172', '2', 'status', '加入首页推荐', '', '0', '0', '0', 'defaul', '', 'status', 'radio', 'array (\n  \'options\' => \'加入首页推荐|2\n取消首页推荐|1\',\n  \'fieldtype\' => \'tinyint\',\n  \'numbertype\' => \'1\',\n  \'default\' => \'1\',\n)', '0', '', '0', '1', '0');
+INSERT INTO `clt_field` VALUES ('172', '2', 'status', '首页推荐', '', '0', '0', '0', 'defaul', '', 'status', 'radio', 'array (\n  \'options\' => \'加入首页推荐|2\n取消首页推荐|1\',\n  \'fieldtype\' => \'varchar\',\n  \'numbertype\' => \'1\',\n  \'default\' => \'1\',\n)', '0', '', '0', '1', '0');
 INSERT INTO `clt_field` VALUES ('189', '17', 'title', '门店名', '', '1', '1', '80', 'defaul', '标题必须为1-80个字符', 'title', 'title', 'array (\n  \'thumb\' => \'1\',\n  \'style\' => \'1\',\n)', '1', '', '1', '1', '1');
 INSERT INTO `clt_field` VALUES ('208', '19', 'description', 'SEO简介', '', '0', '0', '0', '', '', '', 'textarea', 'array (\n  \'fieldtype\' => \'mediumtext\',\n  \'rows\' => \'4\',\n  \'cols\' => \'55\',\n  \'default\' => \'\',\n)', '1', '', '4', '0', '1');
 INSERT INTO `clt_field` VALUES ('187', '4', 'subtitle', '简介', '', '0', '0', '0', 'defaul', '', 'subtitle', 'textarea', 'array (\n  \'fieldtype\' => \'text\',\n  \'default\' => \'\',\n)', '0', '', '3', '1', '0');
@@ -489,7 +499,7 @@ CREATE TABLE `clt_module` (
 -- Records of clt_module
 -- ----------------------------
 INSERT INTO `clt_module` VALUES ('1', '单页模型', 'page', '单页面', '1', '0', '*', '', '0', '1', 'content/edit');
-INSERT INTO `clt_module` VALUES ('2', '文章模型', 'article', '新闻文章', '1', '0', '*', '', '0', '1', 'content/index');
+INSERT INTO `clt_module` VALUES ('2', '文章模型', 'article', '新闻文章', '1', '0', '*', '', '0', '1', 'article/index');
 INSERT INTO `clt_module` VALUES ('3', '多图片模型', 'picture', '图片展示', '1', '0', '*', '', '0', '1', 'content/index');
 INSERT INTO `clt_module` VALUES ('4', '产品模型', 'product', '产品展示', '1', '0', '*', '', '0', '1', 'content/index');
 INSERT INTO `clt_module` VALUES ('5', '下载模型', 'download', '文件下载', '1', '0', '*', '', '0', '1', 'content/index');
@@ -506,7 +516,7 @@ CREATE TABLE `clt_network` (
   `title` varchar(80) NOT NULL DEFAULT '',
   `title_style` varchar(225) NOT NULL DEFAULT '',
   `thumb` varchar(225) NOT NULL DEFAULT '',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `userid` int(8) unsigned NOT NULL DEFAULT '0',
   `username` varchar(40) NOT NULL DEFAULT '',
   `listorder` int(10) unsigned NOT NULL DEFAULT '0',
@@ -521,12 +531,16 @@ CREATE TABLE `clt_network` (
   `area` varchar(255) NOT NULL DEFAULT '',
   `location` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_network
 -- ----------------------------
 INSERT INTO `clt_network` VALUES ('1', '天河店', 'color:;font-weight:normal;', '', '1', '1', 'admin', '1', '1509177315', '1509178579', '0', '', '广州天河五山00', '10086', '', '', '', '');
+INSERT INTO `clt_network` VALUES ('2', '琶洲', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '2', '1509422517', '0', '0', '', '琶洲新村', '10086', '广东', '广州', '海珠区', '23.10041, 113.38181');
+INSERT INTO `clt_network` VALUES ('3', '', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509438455', '0', '0', '', '', '', '', '', '', '');
+INSERT INTO `clt_network` VALUES ('4', '琶洲00', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509438853', '1509439620', '0', '', '庆丰镇', '10086', '广西', '贵港', '港北区', '23.30789, 109.80274');
+INSERT INTO `clt_network` VALUES ('5', '哈哈00', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509442056', '1509443747', '0', '', '琶洲', '10086', '广东', '广州', '海珠区', '23.09734, 113.36389');
 
 -- ----------------------------
 -- Table structure for clt_page
@@ -4202,4 +4216,4 @@ CREATE TABLE `clt_video` (
 -- ----------------------------
 -- Records of clt_video
 -- ----------------------------
-INSERT INTO `clt_video` VALUES ('1', '0', '1', 'admin', '哈哈哈00', 'color:;font-weight:normal;', '', '', '', '', '0', '1', '1', '0', '1509326032', '1509332532', '1', '哈哈哈哈哈哈哈', 'http://www.baidu.com', '');
+INSERT INTO `clt_video` VALUES ('1', '3', '1', 'admin', '哈哈哈00', 'color:;font-weight:normal;', '', '', '', '', '0', '1', '1', '0', '1509326032', '1509435785', '1', '哈哈哈哈哈哈哈', 'http://www.baidu.com', '');

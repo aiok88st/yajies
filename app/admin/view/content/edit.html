@@ -44,8 +44,8 @@
                 $controller = $controllerName;
                 if($controller == 'Page'){ ?>
                 <!--<a href="{:url('page/edit',['id'=>input('catid')])}" class="layui-btn layui-btn-primary">{:lang('back')}</a>-->
-                <?php }elseif($controller == 'Article' && $lang = 1){ ?>
-                <a href="{:url('articles/lists',['catid'=>input('catid')])}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
+                <?php }elseif($controller == 'Article'){ ?>
+                <a href="{:url('Article/index',['catid'=>input('catid')])}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
                <?php }elseif($controller == 'Enarticle' && $lang = 2){?>
                 <a href="{:url('articles/lists2',['catid'=>input('catid')])}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
                 <?php }elseif($controller == 'Product'){ ?>

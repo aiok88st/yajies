@@ -99,7 +99,6 @@ class EmptyController extends Common{
 
         $catid = input('catid');
         $lang = db("category")->where(array('id'=>$catid))->value('lang');
-
         $form=new Form($info);
         $returnData['vo'] = $info;
         $returnData['form'] = $form;
@@ -108,6 +107,11 @@ class EmptyController extends Common{
         $this->assign ( 'title', '编辑内容' );
         $this->assign ( 'lang', $lang );
         $this->assign ( 'controllerName', $controllerName );
+        if($controllerName == 'Network'){
+            $province = db('region')->where('pid',1)->select();
+            $this->assign('province',$province);
+            return $this->fetch('networks/edit');
+        }
         return $this->fetch('content/edit');
     }
     function update(){
@@ -164,8 +168,8 @@ class EmptyController extends Common{
         if (false !== $list) {
             if($controllerName=='Page'){
                 $result['url'] = $purl;//url("admin/category/index");
-            }elseif($controllerName=='Article' && $lang == 1){
-                $result['url'] = url("admin/Articles/lists",array('catid'=>$data['catid']));
+            }elseif($controllerName=='Article'){
+                $result['url'] = url("admin/Article/index",array('catid'=>$data['catid']));
             }elseif($controllerName=='Enarticle' && $lang == 2){
                 $result['url'] = url("admin/Articles/lists2",array('catid'=>$data['catid']));
             }elseif($controllerName=='Product'){
@@ -252,6 +256,8 @@ class EmptyController extends Common{
         $this->assign ( 'title', '添加内容' );
         $this->assign ( 'lang', $lang );
         if($controllerName == 'Network'){
+            $province = db('region')->where('pid',1)->select();
+            $this->assign('province',$province);
             return $this->fetch('networks/add');
         }
         $this->assign ( 'controllerName', $controllerName );
@@ -263,6 +269,7 @@ class EmptyController extends Common{
         $model = $this->dao;
         $fields = $this->fields;
         $data = $this->checkfield($fields,input('post.'));
+
         if(isset($data['code']) && $data['code']==0){
             return $data;
         }
@@ -318,8 +325,8 @@ class EmptyController extends Common{
 
             if($controllerName=='Page'){
                 $result['url'] = url("admin/category/index");
-            }elseif($controllerName=='Article' && $lang == 1){
-                $result['url'] = url("admin/articles/lists",array('catid'=>$data['catid']));
+            }elseif($controllerName=='Article'){
+                $result['url'] = url("admin/Article/index",array('catid'=>$data['catid']));
             }elseif($controllerName=='Enarticle' && $lang == 2){
                 $result['url'] = url("admin/articles/lists2",array('catid'=>$data['catid']));
             }elseif($controllerName=='Product'){
@@ -403,11 +410,15 @@ class EmptyController extends Common{
     //省市区三级联动
     public function getAddrs(){
         $region = db('region');
-        $pid=input('pid');
-        $arr=$region->where("pid=$pid")->select();
-        foreach($arr as $v){
-            echo "<option value='{$v['id']}'>{$v['name']}</option>";
-        }
+        $map['pid']=input('pid');
+        $map['type']=input('type');
+        $list=$region->where($map)->select();
+        echo json_encode($list);
+//        $pid=input('pid');
+//        $arr=$region->where("pid=$pid")->select();
+//        foreach($arr as $v){
+//            echo "<option value='{$v['id']}'>{$v['name']}</option>";
+//        }
     }
 
 

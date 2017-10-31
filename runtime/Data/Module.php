@@ -26,7 +26,7 @@ return array (
     'setup' => '',
     'listorder' => 0,
     'status' => 1,
-    'template' => 'content/index',
+    'template' => 'article/index',
   ),
   3 => 
   array (
