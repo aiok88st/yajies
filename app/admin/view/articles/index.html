@@ -1,0 +1,35 @@
+{include file="common/head"/}
+<div class="admin-main layui-anim layui-anim-upbit">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend id="mtitle">{$title}</legend>
+    </fieldset>
+    <div class="left cloumdTree">
+
+    </div>
+    <iframe src="{$fhref}" frameborder="0" name="contentList" class="right contentList"></iframe>
+</div>
+{include file="common/foot"/}
+<script>
+    layui.use(['tree'], function() {
+        $ = layui.jquery;
+        var h=$(window).height();
+        $('.cloumdTree').css({"height":h+'px'});
+        $('.contentList').css({"height":h+'px'});
+        layui.tree({
+            elem: '.cloumdTree' //传入元素选择器
+            ,target:"contentList"
+            ,click: function(node){
+                $('#mtitle').html(node.name); //node即为当前点击的节点数据
+            }
+            ,nodes:[{
+                name: '所有内容'
+                ,spread:true
+                ,id: 0
+                ,href:"{url('Articles/index')}"
+                ,alias: 'changyong'
+                ,children:  {$TreeShape}
+            }]
+        });
+
+    })
+</script>
