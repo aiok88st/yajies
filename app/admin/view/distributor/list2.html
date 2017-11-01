@@ -1,16 +1,16 @@
 {include file="common/head"/}
 <div class="admin-main layui-anim layui-anim-upbit">
     <fieldset class="layui-elem-field layui-field-title">
-        <legend>{:lang('list')}</legend>
+        <legend>分销商{:lang('list')}</legend>
     </fieldset>
     <div class="demoTable">
         <div class="layui-inline">
             <input class="layui-input" name="key" id="key" placeholder="{:lang('pleaseEnter')}关键字">
         </div>
         <button class="layui-btn" id="search" data-type="reload">{:lang('search')}</button>
-        <a href="{:url('index',['catid'=>input('catid')])}" class="layui-btn">显示全部</a>
+        <a href="{:url('list2')}" class="layui-btn">显示全部</a>
         <button type="button" class="layui-btn layui-btn-danger" id="delAll">批量删除</button>
-        <a href="{:url('add',array('catid'=>input('catid')))}" class="layui-btn" style="float:right;margin-right: 15px;">{:lang('add')}</a>
+        <a href="{:url('Distributor/add')}?t=2" class="layui-btn" style="float:right;margin-right: 15px;">{:lang('add')}</a>
         <div style="clear: both;"></div>
     </div>
     <table class="layui-table" id="list" lay-filter="list"></table>
@@ -23,8 +23,17 @@
     <span style="{{d.title_style}}">{{d.title}}</span>
     {{# if(d.thumb){ }}<img src="__ADMIN__/images/image.gif" onmouseover="layer.tips('<img src=__PUBLIC__/{{d.thumb}}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();">{{# } }}
 </script>
+<script type="text/html" id="open">
+
+    {{# if(d.is_open==1){ }}
+    <a class="layui-btn layui-btn-warm layui-btn-mini" lay-event="open">{:lang('enabled')}</a>
+    {{# }else{  }}
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="open">{:lang('disabled')}</a>
+    {{# } }}
+
+</script>
 <script type="text/html" id="action">
-    <a href="{:url('edit')}?id={{d.id}}&catid={{d.catid}}" class="layui-btn layui-btn-mini">编辑</a>
+    <a href="{:url('edit')}?id={{d.id}}&t=2&pid={{d.pid}}" class="layui-btn layui-btn-mini">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
 </script>
 <script>
@@ -33,18 +42,17 @@
         var tableIn = table.render({
             id: 'content',
             elem: '#list',
-            url: '{:url("index")}',
-            where:{catid:'{:input("catid")}'},
+            url: '{:url("list2")}',
             method: 'post',
             page: true,
             cols: [[
                 {checkbox: true, fixed: true},
                 {field: 'id', title: '{:lang("id")}', width: 80, fixed: true},
-                {field: 'title', title: '{:lang("title")}', width: 400, templet: '#title'},
-                {field: 'keywords',  title: '关键词', width: 200},
-                {field: 'hits',  title: '浏览量', width: 120},
-                {field: 'createtime', title: '{:lang("add")}{:lang("time")}', width: 180},
-                {field: 'listorder', align: 'center', title: '{:lang("order")}', width: 120, templet: '#order'},
+                {field:'username', title: '用户名', width:180,fixed: true},
+                {field:'tel', title: '{:lang("tel")}', width:150},
+                {field:'ip', title: '{:lang("ip")}',width:150},
+                {field: 'add_time', title: '{:lang("add")}{:lang("time")}', width: 180},
+                {field:'is_open', title: '{:lang("status")}',width:150,toolbar: '#open'},
                 {width: 160, align: 'center', toolbar: '#action',title:'操作'}
             ]],
             limit: 10
@@ -57,7 +65,7 @@
                 return;
             }
             tableIn.reload({
-                where: {key: key,catid:'{:input("catid")}'}
+                where: {key: key}
             });
         });
         $('body').on('blur','.list_order',function() {
@@ -77,14 +85,33 @@
         });
         table.on('tool(list)', function(obj) {
             var data = obj.data;
-            if(obj.event === 'del'){
+            if(obj.event === 'open'){
+                loading =layer.load(1, {shade: [0.1,'#fff']});
+                $.post('{:url("adminState")}',{'id': data.id},function (res) {
+                    layer.close(loading);
+                    if (res.status==1) {
+                        if (res.open == 1) {
+                            obj.update({
+                                is_open: '<a class="layui-btn layui-btn-warm layui-btn-mini" lay-event="open">{:lang("enabled")}</a>'
+                            });
+                        } else {
+                            obj.update({
+                                is_open: '<a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="open">{:lang("disabled")}</a>'
+                            });
+                        }
+                    }else{
+                        layer.msg(res.msg,{time:1000,icon:2});
+                        return false;
+                    }
+                })
+            }else if(obj.event === 'del'){
                 layer.confirm('您确定要删除该内容吗？', function(index){
                     var loading = layer.load(1, {shade: [0.1, '#fff']});
-                    $.post("{:url('listDel')}",{id:data.id},function(res){
+                    $.post("{:url('adminDel')}",{id:data.id},function(res){
                         layer.close(loading);
                         if(res.code===1){
                             layer.msg(res.msg,{time:1000,icon:1});
-                            tableIn.reload({where:{catid:'{:input("catid")}'}});
+                            obj.del();
                         }else{
                             layer.msg('操作失败！',{time:1000,icon:2});
                         }
@@ -102,7 +129,7 @@
                     ids.push(o.id);
                 });
                 var loading = layer.load(1, {shade: [0.1, '#fff']});
-                $.post("{:url('delAll')}", {ids: ids,catid:'{:input("catid")}'}, function (data) {
+                $.post("{:url('delAll')}", {ids: ids}, function (data) {
                     layer.close(loading);
                     if (data.code === 1) {
                         layer.msg(data.msg, {time: 1000, icon: 1});

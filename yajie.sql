@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2017-10-31 17:56:56
+Date: 2017-11-01 19:17:02
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -55,7 +55,7 @@ CREATE TABLE `clt_admin` (
   `is_open` tinyint(2) DEFAULT '0' COMMENT '审核状态',
   PRIMARY KEY (`admin_id`),
   KEY `admin_username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_admin
@@ -112,7 +112,7 @@ CREATE TABLE `clt_article` (
 -- ----------------------------
 -- Records of clt_article
 -- ----------------------------
-INSERT INTO `clt_article` VALUES ('1', '5', '1', 'admin', '哈哈', 'color:;font-weight:normal;', '/uploads/20171031/2a125d8f1112329f15af038806f08246.jpg', '哈哈 哈哈哈', '', '<p>问题：今天天气怎么样？</p><p>答案：不错。</p>', '', '0', '1', '0', '1509434586', '1509435514', 'CLTPHP', '', '1', '10086', '100');
+INSERT INTO `clt_article` VALUES ('1', '5', '1', 'admin', '哈哈', 'color:;font-weight:normal;', '/uploads/20171031/2a125d8f1112329f15af038806f08246.jpg', '哈哈 哈哈哈', '', '<p>问题：今天天气怎么样？</p><p>答案：不错。</p>', '', '0', '1', '1', '1509434586', '1509445735', 'CLTPHP', '', '1', '10086', '100');
 
 -- ----------------------------
 -- Table structure for clt_auth_group
@@ -152,7 +152,7 @@ CREATE TABLE `clt_auth_rule` (
   `zt` int(1) DEFAULT NULL,
   `menustatus` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=287 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=290 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_auth_rule
@@ -260,6 +260,9 @@ INSERT INTO `clt_auth_rule` VALUES ('283', 'Video/index', '视频列表', '1', '
 INSERT INTO `clt_auth_rule` VALUES ('284', 'Article', '售后问题', '1', '1', '0', 'icon-list2', '', '0', '52', '1509433389', null, '1');
 INSERT INTO `clt_auth_rule` VALUES ('285', 'Article/index', '售后问题列表', '1', '1', '0', '', '', '284', '2', '1509433478', null, '1');
 INSERT INTO `clt_auth_rule` VALUES ('286', 'Category/index', '文章分类', '1', '1', '0', '', '', '284', '1', '1509434477', null, '1');
+INSERT INTO `clt_auth_rule` VALUES ('287', 'Distributor', '经分销商管理', '1', '1', '0', 'icon-user', '', '0', '53', '1509517389', null, '1');
+INSERT INTO `clt_auth_rule` VALUES ('288', 'Distributor/lists', '经销商列表', '1', '1', '0', '', '', '287', '1', '1509517483', null, '1');
+INSERT INTO `clt_auth_rule` VALUES ('289', 'Distributor/list2', '分销商列表', '1', '1', '0', '', '', '287', '2', '1509517542', null, '1');
 
 -- ----------------------------
 -- Table structure for clt_category
@@ -354,6 +357,28 @@ INSERT INTO `clt_config` VALUES ('74', 'order_shipping_sms_enable', '1', 'sms', 
 INSERT INTO `clt_config` VALUES ('88', 'email_id', 'CLTPHP', 'smtp', '0');
 
 -- ----------------------------
+-- Table structure for clt_distributor
+-- ----------------------------
+DROP TABLE IF EXISTS `clt_distributor`;
+CREATE TABLE `clt_distributor` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `pwd` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `ip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `add_time` int(11) DEFAULT NULL,
+  `is_open` tinyint(255) DEFAULT '0' COMMENT '审核状态',
+  `pid` tinyint(4) NOT NULL DEFAULT '0' COMMENT '父级经销商',
+  `tel` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of clt_distributor
+-- ----------------------------
+INSERT INTO `clt_distributor` VALUES ('5', 'aaaaa', 'e10adc3949ba59abbe56e057f20f883e', '127.0.0.1', '1509527565', '0', '4', '15173301601');
+INSERT INTO `clt_distributor` VALUES ('4', 'hello', 'e10adc3949ba59abbe56e057f20f883e', '127.0.0.1', '1509524586', '0', '0', '15173301602');
+
+-- ----------------------------
 -- Table structure for clt_field
 -- ----------------------------
 DROP TABLE IF EXISTS `clt_field`;
@@ -377,7 +402,7 @@ CREATE TABLE `clt_field` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `issystem` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=228 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=235 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_field
@@ -493,7 +518,7 @@ CREATE TABLE `clt_module` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `template` varchar(255) NOT NULL DEFAULT '' COMMENT '列表页模板',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_module
@@ -4216,4 +4241,4 @@ CREATE TABLE `clt_video` (
 -- ----------------------------
 -- Records of clt_video
 -- ----------------------------
-INSERT INTO `clt_video` VALUES ('1', '3', '1', 'admin', '哈哈哈00', 'color:;font-weight:normal;', '', '', '', '', '0', '1', '1', '0', '1509326032', '1509435785', '1', '哈哈哈哈哈哈哈', 'http://www.baidu.com', '');
+INSERT INTO `clt_video` VALUES ('1', '3', '1', 'admin', '哈哈哈00', 'color:;font-weight:normal;', '', '', '', '', '0', '1', '1', '1000', '1509326032', '1509444307', '1', '哈哈哈哈哈哈哈', 'http://www.baidu.com', '');

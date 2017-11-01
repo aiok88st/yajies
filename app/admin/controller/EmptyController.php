@@ -9,22 +9,19 @@ class EmptyController extends Common{
     {
         parent::_initialize();
         $this->moduleid = $this->mod[MODULE_NAME];
-
-
         $this->dao = db(MODULE_NAME);
-
         $fields = F($this->moduleid.'_Field');
-
         foreach($fields as $key => $res){
             $res['setup']=string2array($res['setup']);
             $this->fields[$key]=$res;
         }
-
         unset($fields);
         unset($res);
         $this->assign ('fields',$this->fields);
     }
+
     public function index(){
+
         $request = Request::instance();
         $modelname = strtolower($request->controller());
         if(request()->isPost()){
@@ -89,12 +86,9 @@ class EmptyController extends Common{
                 $cat = db('category')->where('id',$id)->field('catname,keywords')->find();
                 $data['title'] = $cat['catname'];//$this->categorys[$id]['catname'];
                 $data['keywords'] = $cat['keywords'];//$this->categorys[$id]['keywords'];
-
                 $this->dao->insert($data);
             }
-
         }
-
         $info = $this->dao->where('id',$id)->find();
 
         $catid = input('catid');
@@ -414,11 +408,6 @@ class EmptyController extends Common{
         $map['type']=input('type');
         $list=$region->where($map)->select();
         echo json_encode($list);
-//        $pid=input('pid');
-//        $arr=$region->where("pid=$pid")->select();
-//        foreach($arr as $v){
-//            echo "<option value='{$v['id']}'>{$v['name']}</option>";
-//        }
     }
 
 

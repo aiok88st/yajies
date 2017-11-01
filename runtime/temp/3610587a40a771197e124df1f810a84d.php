@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:55:"F:\wamp\www\yajie/app/admin\view\content\videoList.html";i:1509333093;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1507509539;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:55:"F:\wamp\www\yajie/app/admin\view\content\videoList.html";i:1509447474;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1509507433;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="__STATIC__/plugins/layui/css/layui.css" media="all" />
-    <link rel="stylesheet" href="__ADMIN__/css/global.css" media="all">
+    <link rel="stylesheet" href="__STATIC__/plugins/layui/css/layui.css?v=1" media="all" />
+    <link rel="stylesheet" href="__ADMIN__/css/global.css?v=1" media="all">
     <link rel="stylesheet" href="__STATIC__/common/css/font.css" media="all">
 </head>
 <body class="skin-0">
@@ -60,7 +60,7 @@
                 {field: 'id', title: '<?php echo lang("id"); ?>', width: 80, fixed: true},
                 {field: 'title', title: '标题', width: 400},
                 {field: 'link', title: '视频链接地址', width: 500},
-                {field: 'hits', title: '浏览量', width: 100},
+                {field: 'hits', title: '浏览量', width: 120},
                 {field: 'createtime', title: '<?php echo lang("add"); ?><?php echo lang("time"); ?>', width: 180},
                 {field: 'listorder', align: 'center', title: '<?php echo lang("order"); ?>', width: 120, templet: '#order'},
                 {width: 200, align: 'center', toolbar: '#action',title:'操作'}

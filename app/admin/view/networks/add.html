@@ -37,7 +37,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">门店地址</label>
             <div class="">
-                <select onchange="loadRegion('province',2,'city','{:url('getAddrs')}')" id="province" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select onchange="loadRegion('province',2,'city','{:url('getAddrs')}')" id="province" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option value="0" selected>省份/直辖市</option>
                     {volist name="province" id="vo"}
                     <option value="{$vo.id}" >{$vo.name}</option>
@@ -45,12 +45,12 @@
                 </select>
             </div>
             <div class="">
-                <select  onchange="loadRegion('city',3,'district','{:url('getAddrs')}')" id="city" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select  onchange="loadRegion('city',3,'district','{:url('getAddrs')}')" id="city" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option value="0">市/县</option>
                 </select>
             </div>
             <div class="">
-                <select  id="district" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select  id="district" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option value="0">镇/区</option>
                 </select>
             </div>

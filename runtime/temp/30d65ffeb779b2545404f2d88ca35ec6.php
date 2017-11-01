@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:49:"F:\wamp\www\yajie/app/admin\view\index\index.html";i:1509178717;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1507509539;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:49:"F:\wamp\www\yajie/app/admin\view\index\index.html";i:1509516325;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1509507433;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="__STATIC__/plugins/layui/css/layui.css" media="all" />
-    <link rel="stylesheet" href="__ADMIN__/css/global.css" media="all">
+    <link rel="stylesheet" href="__STATIC__/plugins/layui/css/layui.css?v=1" media="all" />
+    <link rel="stylesheet" href="__ADMIN__/css/global.css?v=1" media="all">
     <link rel="stylesheet" href="__STATIC__/common/css/font.css" media="all">
 </head>
 <body class="skin-0">
@@ -76,7 +76,7 @@
     <div class="layui-side layui-bg-black" id="admin-side">
         <div class="layui-side-scroll" id="admin-navbar-side" lay-filter="side"></div>
     </div>
-    <div class="layui-body" style="bottom: 0;border-left: solid 2px #1AA094;" id="admin-body">
+    <div class="layui-body" style="bottom: 0;border-left: solid 2px #032178;" id="admin-body">
         <div class="layui-tab admin-nav-card layui-tab-brief" lay-filter="admin-tab">
             <ul class="layui-tab-title">
                 <li class="layui-this">

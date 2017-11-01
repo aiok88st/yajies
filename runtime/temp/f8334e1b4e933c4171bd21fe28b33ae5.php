@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:50:"F:\wamp\www\yajie/app/admin\view\networks\add.html";i:1509442349;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1507509539;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:50:"F:\wamp\www\yajie/app/admin\view\networks\add.html";i:1509445242;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1509507433;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="__STATIC__/plugins/layui/css/layui.css" media="all" />
-    <link rel="stylesheet" href="__ADMIN__/css/global.css" media="all">
+    <link rel="stylesheet" href="__STATIC__/plugins/layui/css/layui.css?v=1" media="all" />
+    <link rel="stylesheet" href="__ADMIN__/css/global.css?v=1" media="all">
     <link rel="stylesheet" href="__STATIC__/common/css/font.css" media="all">
 </head>
 <body class="skin-0">
@@ -55,7 +55,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">门店地址</label>
             <div class="">
-                <select onchange="loadRegion('province',2,'city','<?php echo url('getAddrs'); ?>')" id="province" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select onchange="loadRegion('province',2,'city','<?php echo url('getAddrs'); ?>')" id="province" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option value="0" selected>省份/直辖市</option>
                     <?php if(is_array($province) || $province instanceof \think\Collection || $province instanceof \think\Paginator): $i = 0; $__LIST__ = $province;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
                     <option value="<?php echo $vo['id']; ?>" ><?php echo $vo['name']; ?></option>
@@ -63,12 +63,12 @@
                 </select>
             </div>
             <div class="">
-                <select  onchange="loadRegion('city',3,'district','<?php echo url('getAddrs'); ?>')" id="city" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select  onchange="loadRegion('city',3,'district','<?php echo url('getAddrs'); ?>')" id="city" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option value="0">市/县</option>
                 </select>
             </div>
             <div class="">
-                <select  id="district" lay-ignore style="width: 6%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select  id="district" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option value="0">镇/区</option>
                 </select>
             </div>
