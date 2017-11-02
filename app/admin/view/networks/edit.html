@@ -21,6 +21,15 @@
     <form class="layui-form" method="post" target="rfFrame">
 
         <div class="layui-form-item">
+            <label class="layui-form-label">经/分销商</label>
+            <div class="layui-input-4">
+                <select name="did" lay-verify="required">
+                    {$distributor}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <label class="layui-form-label">门店名</label>
             <div class="layui-input-block">
                 <input type="text" name="title" value="{$info.title}" required  lay-verify="required" placeholder="请输入门店名" autocomplete="off" class="layui-input" style="width: 50%;">
@@ -37,20 +46,20 @@
         <div class="layui-form-item">
             <label class="layui-form-label">门店地址</label>
             <div class="">
-                <select  onchange="loadRegion('province',2,'city','{:url('getAddrs')}')" id="province" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
-                    <option selected>{$info.province}</option>
+                <select name="province" onchange="loadRegion('province',2,'city','{:url('getAddrs')}')" id="province" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                    <!--<option selected>{$info.province}</option>-->
                     {volist name="province" id="vo"}
-                    <option value="{$vo.id}" >{$vo.name}</option>
+                    <option {if condition="$info['province'] eq $vo['id']"}selected="selected"{/if} value="{$vo.id}" >{$vo.name}</option>
                     {/volist}
                 </select>
             </div>
             <div class="">
-                <select  onchange="loadRegion('city',3,'district','{:url('getAddrs')}')" id="city" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select name="city" onchange="loadRegion('city',3,'area','{:url('getAddrs')}')" id="city" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option>{$info.city}</option>
                 </select>
             </div>
             <div class="">
-                <select  id="district" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select name="area" id="area" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option>{$info.area}</option>
                 </select>
             </div>
@@ -75,10 +84,8 @@
         </div>
         <input TYPE="hidden" name="id" value="{$info.id}">
         <input type="hidden" name="location" value="{$info.location}" id="locate">
-        <input type="hidden" name="province" value="{$info.province}" id="prov">
         <input type="hidden" name="city" value="{$info.city}" id="citys">
         <input type="hidden" name="area" value="{$info.area}" id="areas">
-        <input type="hidden" name="addr" value="{$info.addr}" id="addrs">
     </form>
 </div>
 <script src='__STATIC__/plugins/spectrum/spectrum.js'></script>
@@ -89,7 +96,7 @@
 </head>
 <script>
     //省市区三级联动
-    function loadRegion(sel,type_id,selName,url){
+    function loadRegion(sel,type_id,selName,url,oldId){
         jQuery("#"+selName+" option").each(function(){
             jQuery(this).remove();
         });
@@ -97,11 +104,17 @@
         if(jQuery("#"+sel).val()==0){
             return;
         }
+
         jQuery.getJSON(url,{pid:jQuery("#"+sel).val(),type:type_id},
             function(data){
                 if(data){
                     jQuery.each(data,function(idx,item){
-                        jQuery("<option value="+item.id+">"+item.name+"</option>").appendTo(jQuery("#"+selName));
+                        if(item.id==oldId){
+                            jQuery('<option value="'+item.id+'" selected="selected">'+item.name+'</option>').appendTo(jQuery("#"+selName));
+                        }else{
+                            jQuery("<option value="+item.id+">"+item.name+"</option>").appendTo(jQuery("#"+selName));
+                        }
+
                     });
                 }else{
                     jQuery("<option value='0'>请选择</option>").appendTo(jQuery("#"+selName));
@@ -109,6 +122,11 @@
             }
         );
     }
+    loadRegion('province',2,'city',"{:url('getAddrs')}","{$info['city']}");
+    setTimeout(function(){
+        loadRegion('city',3,'area',"{:url('getAddrs')}","{$info['area']}");
+    },500);
+
 </script>
 
 <script>
@@ -120,12 +138,17 @@
     {/if}
 
     var geocoder,map,marker = null;
-    var init = function() {
-        var center = new qq.maps.LatLng(39.916527,116.397128);
+    var init = function(Lat,Lng) {
+        var center = new qq.maps.LatLng(Lat,Lng);//23.134751, 113.339327
         map = new qq.maps.Map(document.getElementById('container'),{
             center: center,
             zoom: 15
         });
+        var marker = new qq.maps.Marker({
+            position: center,
+            map: map
+        });
+
         //调用地址解析类
         geocoder = new qq.maps.Geocoder({
             complete : function(result){
@@ -138,8 +161,17 @@
                 //console.log(result.detail.location);
             }
         });
+        qq.maps.event.addListener(
+             map,
+             'click',
+             function(event) {
+                  var lng=event.latLng.getLng();
+                  var lat=event.latLng.getLat();
+                 $("#locate").attr('value',lat+','+lng);
+                  init(lat,lng);
+             }
+        );
     }
-
     function codeAddress() {
         var province = $("#province").find("option:selected").text();
         var city=$("#city").find("option:selected").text();
@@ -148,13 +180,8 @@
         var address = "中国,"+province+","+city+","+area+","+addr;
         //通过getLocation();方法获取位置信息值
         geocoder.getLocation(address);
-        $("#prov").attr('value',province);
-        $("#citys").attr('value',city);
-        $("#areas").attr('value',area);
-        $("#addrs").attr('value',addr);
     }
-
-    init();
+    init({$info['location']});
 
     layui.use(['form','upload','layedit','laydate'], function () {
         var form = layui.form,upload = layui.upload,layedit = layui.layedit,laydate = layui.laydate;

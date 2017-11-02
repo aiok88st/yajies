@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2017-11-01 19:17:02
+Date: 2017-11-02 18:03:10
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -376,7 +376,7 @@ CREATE TABLE `clt_distributor` (
 -- Records of clt_distributor
 -- ----------------------------
 INSERT INTO `clt_distributor` VALUES ('5', 'aaaaa', 'e10adc3949ba59abbe56e057f20f883e', '127.0.0.1', '1509527565', '0', '4', '15173301601');
-INSERT INTO `clt_distributor` VALUES ('4', 'hello', 'e10adc3949ba59abbe56e057f20f883e', '127.0.0.1', '1509524586', '0', '0', '15173301602');
+INSERT INTO `clt_distributor` VALUES ('4', 'hello', '4297f44b13955235245b2497399d7a93', '127.0.0.1', '1509524586', '1', '0', '15173301602');
 
 -- ----------------------------
 -- Table structure for clt_field
@@ -402,7 +402,7 @@ CREATE TABLE `clt_field` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `issystem` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=235 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=236 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_field
@@ -500,6 +500,26 @@ INSERT INTO `clt_field` VALUES ('189', '17', 'title', '门店名', '', '1', '1',
 INSERT INTO `clt_field` VALUES ('208', '19', 'description', 'SEO简介', '', '0', '0', '0', '', '', '', 'textarea', 'array (\n  \'fieldtype\' => \'mediumtext\',\n  \'rows\' => \'4\',\n  \'cols\' => \'55\',\n  \'default\' => \'\',\n)', '1', '', '4', '0', '1');
 INSERT INTO `clt_field` VALUES ('187', '4', 'subtitle', '简介', '', '0', '0', '0', 'defaul', '', 'subtitle', 'textarea', 'array (\n  \'fieldtype\' => \'text\',\n  \'default\' => \'\',\n)', '0', '', '3', '1', '0');
 INSERT INTO `clt_field` VALUES ('188', '4', 'parameter', '参数', '', '0', '0', '0', 'defaul', '', 'parameter', 'editor', 'array (\n  \'edittype\' => \'UEditor\',\n)', '0', '', '5', '1', '0');
+INSERT INTO `clt_field` VALUES ('235', '17', 'did', '经分销商', '', '1', '0', '0', 'defaul', '', 'did', 'select', 'array (\n  \'options\' => \'\',\n  \'multiple\' => \'0\',\n  \'fieldtype\' => \'varchar\',\n  \'numbertype\' => \'1\',\n  \'size\' => \'\',\n  \'default\' => \'\',\n)', '0', '', '0', '1', '0');
+
+-- ----------------------------
+-- Table structure for clt_member_open
+-- ----------------------------
+DROP TABLE IF EXISTS `clt_member_open`;
+CREATE TABLE `clt_member_open` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `open_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `open_face` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `open_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `addtime` int(11) DEFAULT NULL,
+  `ip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of clt_member_open
+-- ----------------------------
+INSERT INTO `clt_member_open` VALUES ('1', 'ソ江南Ⅲ', 'http://wx.qlogo.cn/mmopen/vi_32/QzZ2toyFpHKzoOVR1ic8w4dr88CicwYsoTdIYvmYlZQMlX5SB6m3w0eS0Ox0uAaiaRTfY1gicln7b1Asu2TAYWyKwQ/0', 'oqL9H1ZMbgwwfJvBoCT6giSHho4g', '1507803479', '14.17.37.72');
 
 -- ----------------------------
 -- Table structure for clt_module
@@ -555,17 +575,20 @@ CREATE TABLE `clt_network` (
   `city` varchar(255) NOT NULL DEFAULT '',
   `area` varchar(255) NOT NULL DEFAULT '',
   `location` varchar(255) NOT NULL DEFAULT '',
+  `did` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of clt_network
 -- ----------------------------
-INSERT INTO `clt_network` VALUES ('1', '天河店', 'color:;font-weight:normal;', '', '1', '1', 'admin', '1', '1509177315', '1509178579', '0', '', '广州天河五山00', '10086', '', '', '', '');
-INSERT INTO `clt_network` VALUES ('2', '琶洲', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '2', '1509422517', '0', '0', '', '琶洲新村', '10086', '广东', '广州', '海珠区', '23.10041, 113.38181');
-INSERT INTO `clt_network` VALUES ('3', '', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509438455', '0', '0', '', '', '', '', '', '', '');
-INSERT INTO `clt_network` VALUES ('4', '琶洲00', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509438853', '1509439620', '0', '', '庆丰镇', '10086', '广西', '贵港', '港北区', '23.30789, 109.80274');
-INSERT INTO `clt_network` VALUES ('5', '哈哈00', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509442056', '1509443747', '0', '', '琶洲', '10086', '广东', '广州', '海珠区', '23.09734, 113.36389');
+INSERT INTO `clt_network` VALUES ('1', '天河店', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '1', '1509177315', '1509602666', '0', '', '五山', '10086', '6', '76', '693', '23.12948, 113.32174', '4');
+INSERT INTO `clt_network` VALUES ('2', '琶洲', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '2', '1509422517', '0', '0', '', '琶洲新村', '10086', '6', '76', '696', '23.10041, 113.38181', '4');
+INSERT INTO `clt_network` VALUES ('4', '琶洲00', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509438853', '1509611498', '0', '', '庆丰镇', '10086', '7', '103', '909', '23.25378, 109.76696', '4');
+INSERT INTO `clt_network` VALUES ('5', '哈哈00', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509442056', '1509611473', '0', '', '琶洲', '10086', '6', '76', '696', '23.10022, 113.37645', '4');
+INSERT INTO `clt_network` VALUES ('6', '天河', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509540805', '1509611378', '0', '', '石牌桥', '10086', '6', '76', '693', '23.133004398711822,113.3327127990924', '4');
+INSERT INTO `clt_network` VALUES ('7', '天河', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509605982', '1509610989', '0', '', '岗顶', '10086', '6', '76', '693', '23.133912084907994,113.3389784393512', '4');
+INSERT INTO `clt_network` VALUES ('8', '华师', 'color:#222;font-weight:normal;', '', '1', '1', 'admin', '0', '1509611284', '0', '0', '', '华师', '10086', '6', '76', '693', '23.140147329564478,113.34567323313422', '4');
 
 -- ----------------------------
 -- Table structure for clt_page

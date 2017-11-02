@@ -1,0 +1,190 @@
+{extend name="common/header" /}
+{block name="headers"}
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+    var link = "http://archie.hengdikeji.com/yajie/index.php/home/Index/";
+    $.get(window.link+'getJs',function(res){
+        wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId:res.appId, // 必填，公众号的唯一标识
+            timestamp: res.timestamp, // 必填，生成签名的时间戳
+            nonceStr:res.nonceStr, // 必填，生成签名的随机串
+            signature:res.signature,// 必填，签名，见附录1
+            jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','openLocation'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+    },"JSON")
+</script>
+{/block}
+{block name="main"}
+<div id="shopList">
+    <!--导航栏-->
+    <div id="head" class="rHead">
+        <div class="hleft return floatl">
+            <a href="###">&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        </div>
+        <div class="hmiddle floatl">
+            <p>附近网点</p>
+        </div>
+        <div class="hright floatl">
+
+        </div>
+        <div class="clearl"></div>
+    </div>
+    <div class="shopList" style="display: none;">
+        <div class="addressBox">
+            <div class="addressShow">
+                <ul>
+                    <li>
+                        <p>1.佛山国美雅洁维修有限公司</p>
+                    </li>
+                    <li>
+                        <p>佛山新一城广场五楼售后部</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="addressMethod">
+                <div class="go floatl">
+                    <a href="###">到这去</a>
+                </div>
+                <div class="phone floatl">
+                    <a href="###">打电话</a>
+                </div>
+                <div class="clearl"></div>
+            </div>
+        </div>
+        <div class="addressBox">
+            <div class="addressShow">
+                <ul>
+                    <li>
+                        <p>1.佛山国美雅洁维修有限公司</p>
+                    </li>
+                    <li>
+                        <p>佛山新一城广场五楼售后部</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="addressMethod">
+                <div class="go floatl">
+                    <a href="###">到这去</a>
+                </div>
+                <div class="phone floatl">
+                    <a href="###">打电话</a>
+                </div>
+                <div class="clearl"></div>
+            </div>
+        </div>
+        <div class="addressBox">
+            <div class="addressShow">
+                <ul>
+                    <li>
+                        <p>1.佛山国美雅洁维修有限公司</p>
+                    </li>
+                    <li>
+                        <p>佛山新一城广场五楼售后部</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="addressMethod">
+                <div class="go floatl">
+                    <a href="###">到这去</a>
+                </div>
+                <div class="phone floatl">
+                    <a href="###">打电话</a>
+                </div>
+                <div class="clearl"></div>
+            </div>
+        </div>
+        <div class="addressBox">
+            <div class="addressShow">
+                <ul>
+                    <li>
+                        <p>1.佛山国美雅洁维修有限公司</p>
+                    </li>
+                    <li>
+                        <p>佛山新一城广场五楼售后部</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="addressMethod">
+                <div class="go floatl">
+                    <a href="###">到这去</a>
+                </div>
+                <div class="phone floatl">
+                    <a href="###">打电话</a>
+                </div>
+                <div class="clearl"></div>
+            </div>
+        </div>
+    </div>
+    <div class="shopSearch">
+        <!--<div class="searchBox" style="display: none;">-->
+            <!--<p>广东省  广州市  海珠区</p>-->
+        <!--</div>-->
+        <div class="searchCondition">
+            <ul>
+                <li class="choiceArea">
+                    <p>所在省份</p>
+                    <select name="province"  onchange="loadRegion('province',2,'city','getAddrs')" id="province">
+                        {volist name="province" id="vo"}
+                        <option value="{$vo.id}" >{$vo.name}</option>
+                        {/volist}
+                    </select>
+                    <img src="__HOME__/img/circle.png" class="selected circle"/>
+                    <img src="__HOME__/img/right.png" />
+                </li>
+                <li class="choiceArea">
+                    <p>所在城市</p>
+                    <select name="city" onchange="loadRegion('city',3,'area','getAddrs')" id="city">
+                    </select>
+                    <img src="__HOME__/img/circle.png" class="circle" />
+                    <img src="__HOME__/img/right.png" />
+                </li>
+                <li class="choiceArea">
+                    <p>所在县区</p>
+                    <select name="area" id="area">
+                    </select>
+                    <img src="__HOME__/img/circle.png" class="circle" />
+                    <img src="__HOME__/img/right.png" />
+                </li>
+            </ul>
+        </div>
+        <div class="searchBtn" onclick="search()">
+            <button>查找</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    wx.ready(function () {
+        wx.checkJsApi({
+            jsApiList: [
+                'getLocation'
+            ],
+            success: function (res) {
+                if (res.checkResult.getLocation == false) {
+                    alert('你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
+                    return;
+                }
+            }
+        });
+        wx.getLocation({
+            success: function (res) {
+                console.log(res);
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
+            },
+            cancel: function (res) {
+                alert('用户拒绝授权获取地理位置');
+            }
+        });
+    });
+</script>
+
+{/block}
+
+{block name="footer"}
+{include file="common/footer" /}
+<script type="text/javascript" src="__HOME__/js/webShopList.js" ></script>
+{/block}
+

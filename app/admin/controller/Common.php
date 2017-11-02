@@ -53,4 +53,17 @@ class Common extends Controller
     public function _empty(){
         return $this->error('空操作，返回上次访问页面中...');
     }
+
+    public function getNetwork($map,$order,$pageSize,$page){
+        $list=Db::table(config('database.prefix').'network')->alias('a')
+            ->join(config('database.prefix').'region ag','a.province = ag.id','left')
+            ->join(config('database.prefix').'region r','a.city = r.id','left')
+            ->join(config('database.prefix').'region rs','a.area = rs.id','left')
+            ->field('a.*,ag.name as province,r.name as city,rs.name as area')
+            ->where($map)
+            ->order($order)
+            ->paginate(array('list_rows'=>$pageSize,'page'=>$page))
+            ->toArray();
+        return $list;
+    }
 }

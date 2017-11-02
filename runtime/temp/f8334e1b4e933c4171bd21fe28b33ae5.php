@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:50:"F:\wamp\www\yajie/app/admin\view\networks\add.html";i:1509445242;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1509507433;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:50:"F:\wamp\www\yajie/app/admin\view\networks\add.html";i:1509611530;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1509507433;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,6 +39,17 @@
     <form class="layui-form" method="post" target="rfFrame">
 
         <div class="layui-form-item">
+            <label class="layui-form-label">经/分销商</label>
+            <div class="layui-input-4">
+                <select name="did" lay-verify="required">
+                    <option value="">请选择</option>
+                    <?php echo $distributor; ?>
+
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <label class="layui-form-label">门店名</label>
             <div class="layui-input-block">
                 <input type="text" name="title" required  lay-verify="required" placeholder="请输入门店名" autocomplete="off" class="layui-input" style="width: 50%;">
@@ -55,7 +66,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">门店地址</label>
             <div class="">
-                <select onchange="loadRegion('province',2,'city','<?php echo url('getAddrs'); ?>')" id="province" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select name="province" onchange="loadRegion('province',2,'city','<?php echo url('getAddrs'); ?>')" id="province" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option value="0" selected>省份/直辖市</option>
                     <?php if(is_array($province) || $province instanceof \think\Collection || $province instanceof \think\Paginator): $i = 0; $__LIST__ = $province;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
                     <option value="<?php echo $vo['id']; ?>" ><?php echo $vo['name']; ?></option>
@@ -63,12 +74,12 @@
                 </select>
             </div>
             <div class="">
-                <select  onchange="loadRegion('city',3,'district','<?php echo url('getAddrs'); ?>')" id="city" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select name="city" onchange="loadRegion('city',3,'district','<?php echo url('getAddrs'); ?>')" id="city" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option value="0">市/县</option>
                 </select>
             </div>
             <div class="">
-                <select  id="district" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select name="area" id="district" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <option value="0">镇/区</option>
                 </select>
             </div>
@@ -93,10 +104,6 @@
             </div>
         </div>
         <input type="hidden" name="location" value="" id="locate">
-        <input type="hidden" name="province" value="" id="prov">
-        <input type="hidden" name="city" value="" id="citys">
-        <input type="hidden" name="area" value="" id="areas">
-        <input type="hidden" name="addr" value="" id="addrs">
     </form>
 </div>
 <script src='__STATIC__/plugins/spectrum/spectrum.js'></script>
@@ -127,6 +134,7 @@
             }
         );
     }
+
 </script>
 
 <script>
@@ -138,11 +146,15 @@
     <?php endif; ?>
 
     var geocoder,map,marker = null;
-    var init = function() {
-        var center = new qq.maps.LatLng(39.916527,116.397128);
+    var init = function(Lat,Lng) {
+        var center = new qq.maps.LatLng(Lat,Lng);//23.134751, 113.339327
         map = new qq.maps.Map(document.getElementById('container'),{
             center: center,
             zoom: 15
+        });
+        var marker = new qq.maps.Marker({
+            position: center,
+            map: map
         });
         //调用地址解析类
         geocoder = new qq.maps.Geocoder({
@@ -156,22 +168,27 @@
                 //console.log(result.detail.location);
             }
         });
+        qq.maps.event.addListener(
+                map,
+                'click',
+                function(event) {
+                    var lng=event.latLng.getLng();
+                    var lat=event.latLng.getLat();
+                    $("#locate").attr('value',lat+','+lng);
+                    init(lat,lng);
+                }
+        );
     }
-
     function codeAddress() {
-       var province = $("#province").find("option:selected").text();
-       var city=$("#city").find("option:selected").text();
-       var area=$("#district").find("option:selected").text();
-       var addr=$("#addr").val();
+        var province = $("#province").find("option:selected").text();
+        var city=$("#city").find("option:selected").text();
+        var area=$("#district").find("option:selected").text();
+        var addr=$("#addr").val();
         var address = "中国,"+province+","+city+","+area+","+addr;
         //通过getLocation();方法获取位置信息值
         geocoder.getLocation(address);
-        $("#prov").attr('value',province);
-        $("#citys").attr('value',city);
-        $("#areas").attr('value',area);
-        $("#addrs").attr('value',addr);
     }
-    init();
+    init(23.134751,113.339327);
 
     layui.use(['form','upload','layedit','laydate'], function () {
         var form = layui.form,upload = layui.upload,layedit = layui.layedit,laydate = layui.laydate;

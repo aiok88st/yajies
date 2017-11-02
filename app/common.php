@@ -667,3 +667,32 @@ function TreeShape($list,$parent_id){
     return $tree;
 }
 
+//树形无限极分类
+function getTree($table,$pid=0,$num=1,$selectId=0){
+    $list=db($table)->where("pid=$pid")->select();
+    $tree='';
+    $strGang=str_repeat('&nbsp;&nbsp;', $num-1);
+    $num++;
+    foreach ($list as $key=>$v){
+        if($v['id']==$selectId){
+            $tree.="<option selected='selected' value='{$v['id']}'>{$strGang}{$v['username']}</option>";
+        }else{
+            $tree.="<option value='{$v['id']}'>{$strGang}{$v['username']}</option>";
+        }
+        //找第一级的子分类
+        $optionSon=getTree($table,$v['id'],$num,$selectId);
+        $tree.=$optionSon;
+    }
+    return $tree;
+}
+
+//省市区三级联动
+function getLocation($table,$pid,$type){
+    $region = db($table);
+    $map['pid']=$pid;
+    $map['type']=$type;
+    $list=$region->where($map)->select();
+    return $list;
+}
+
+

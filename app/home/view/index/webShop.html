@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>雅洁售后网店</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		<meta content="yes" name="apple-mobile-web-app-capable"/>
+	    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+	    <meta content="telephone=no" name="format-detection"/>
+	    <link rel="stylesheet" href="css/swiper-3.4.2.min.css" />
+	    <link rel="stylesheet" href="css/reset.css" />
+	    <link rel="stylesheet" href="css/public.css" />
+	    <link rel="stylesheet" href="css/webShop.css" />	
+	    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	    <script type="text/javascript" src="js/swiper-3.4.2.min.js" ></script>
+	    <script type="text/javascript" src="js/rem.js" ></script>
+	</head>
+	<body>
+		<div id="webShop">
+			<!--导航栏-->
+			<div id="head">
+				<div class="hleft floatl">
+					<a href="###">佛山</a>
+				</div>
+				<div class="hmiddle floatl">
+					<p>附近网点</p>
+				</div>
+				<div class="hright floatl">
+					<a href="###">列表</a>
+					<div class="clearr"></div>
+				</div>
+				<div class="clearl"></div>
+			</div>
+			<div id="map">
+				<p>sorry，网络出错了！！！</p>
+			</div>
+			<div class="shopAddress" >
+				<!--网点-->
+				<div class="swiper-container" style="display: none;">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<div class="addressBox">
+								<div class="addressShow">
+									<ul>
+										<li>
+											<p>1.佛山国美雅洁维修有限公司</p>
+										</li>
+										<li>
+											<p>佛山新一城广场五楼售后部</p>
+										</li>
+									</ul>
+								</div>
+								<div class="addressMethod">
+									<div class="go floatl">
+										<a href="###">到这去</a>
+									</div>
+									<div class="phone floatl">
+										<a href="###">打电话</a>
+									</div>
+									<div class="clearl"></div>
+								</div>
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="addressBox">
+								<div class="addressShow">
+									<ul>
+										<li>
+											<p>1.佛山国美雅洁维修有限公司</p>
+										</li>
+										<li>
+											<p>佛山新一城广场五楼售后部</p>
+										</li>
+									</ul>
+								</div>
+								<div class="addressMethod">
+									<div class="go floatl">
+										<a href="###">到这去</a>
+									</div>
+									<div class="phone floatl">
+										<a href="###">打电话</a>
+									</div>
+									<div class="clearl"></div>
+								</div>
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="addressBox">
+								<div class="addressShow">
+									<ul>
+										<li>
+											<p>1.佛山国美雅洁维修有限公司</p>
+										</li>
+										<li>
+											<p>佛山新一城广场五楼售后部</p>
+										</li>
+									</ul>
+								</div>
+								<div class="addressMethod">
+									<div class="go floatl">
+										<a href="###">到这去</a>
+									</div>
+									<div class="phone floatl">
+										<a href="###">打电话</a>
+									</div>
+									<div class="clearl"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--网点搜索中-->
+				<div class="searchWebShop">
+					<div class="addressBox">
+						<ul>
+							<li>
+								<img src="img/search.png" style="width: 25%;"/>
+							</li>
+							<li>
+								<p>您附近区域没有售后网点</p>
+							</li>
+							<li>
+								<p>正在搜索其他地区</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!--没有网点-->
+				<div class="searchWebShop"  style="display: none;">
+					<div class="addressBox">
+						<ul>
+							<li>
+								<img src="img/laugh.png" />
+							</li>
+							<li>
+								<p>您所在的省份没有售后网点</p>
+							</li>
+							<li>
+								<p>感谢关注</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			var mySwiper = new Swiper('.swiper-container', {
+				direction : 'horizontal',
+			});
+		</script>
+	</body>
+</html>

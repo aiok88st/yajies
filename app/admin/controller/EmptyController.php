@@ -51,11 +51,16 @@ class EmptyController extends Common{
                     $map['catid']=array('in',$catid);
                 }
             }
-            $list = $model
-                ->where($map)
-                ->order($order)
-                ->paginate(array('list_rows'=>$pageSize,'page'=>$page))
-                ->toArray();
+            if($modelname == 'network'){
+                $list = $this->getNetwork($map,$order,$pageSize,$page);
+            }else{
+                $list = $model
+                    ->where($map)
+                    ->order($order)
+                    ->paginate(array('list_rows'=>$pageSize,'page'=>$page))
+                    ->toArray();
+            }
+
             //echo $model->getLastSql();
             $rsult['code'] = 0;
             $rsult['msg'] = "获取成功";
@@ -102,6 +107,9 @@ class EmptyController extends Common{
         $this->assign ( 'lang', $lang );
         $this->assign ( 'controllerName', $controllerName );
         if($controllerName == 'Network'){
+            $distributor=getTree('distributor',0,1,$info['did']);
+            $this->assign('distributor',$distributor);
+
             $province = db('region')->where('pid',1)->select();
             $this->assign('province',$province);
             return $this->fetch('networks/edit');
@@ -250,6 +258,9 @@ class EmptyController extends Common{
         $this->assign ( 'title', '添加内容' );
         $this->assign ( 'lang', $lang );
         if($controllerName == 'Network'){
+            $distributor=getTree('distributor',0,1,0);
+            $this->assign('distributor',$distributor);
+
             $province = db('region')->where('pid',1)->select();
             $this->assign('province',$province);
             return $this->fetch('networks/add');
@@ -403,10 +414,12 @@ class EmptyController extends Common{
 
     //省市区三级联动
     public function getAddrs(){
-        $region = db('region');
-        $map['pid']=input('pid');
-        $map['type']=input('type');
-        $list=$region->where($map)->select();
+//        $region = db('region');
+//        $map['pid']=input('pid');
+//        $map['type']=input('type');
+//        $list=$region->where($map)->select();
+//        echo json_encode($list);
+        $list = getLocation('region',input('pid'),input('type'));
         echo json_encode($list);
     }
 
