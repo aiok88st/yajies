@@ -1,8 +1,15 @@
 {extend name="common/header" /}
 {block name="headers"}
+<title>售后网点</title>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<script type="text/javascript" src="__HOME__/load/js/bemLoad.js?v=3" ></script>
 <script type="text/javascript">
     var link = "http://archie.hengdikeji.com/yajie/index.php/home/Index/";
+    var load;
+    $(function(){
+        load = new bemLoad(200,0.75);
+    });
     $.get(window.link+'getJs',function(res){
         wx.config({
             debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -10,8 +17,34 @@
             timestamp: res.timestamp, // 必填，生成签名的时间戳
             nonceStr:res.nonceStr, // 必填，生成签名的随机串
             signature:res.signature,// 必填，签名，见附录1
-            jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','openLocation'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+            jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','openLocation','getLocation'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
         });
+        wx.ready(function () {
+            wx.getLocation({
+                success: function (res) {
+                    var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                    var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                    $('#lats').attr('value',latitude);
+                    $('#lags').attr('value',longitude);
+                    var geocoder = new qq.maps.Geocoder({
+                        complete: function (result) {   //解析成功的回调函数
+                            var address = result.detail.addressComponents;  //获取详细地址信息
+
+                            {if condition="!input('province')"}
+                            window.location.href='{:url("index/shopList")}?province='+address.province + '&city='+address.city+'&district='+address.district;
+                            {else/}
+                            load.close();
+                            {/if}
+                        }
+                    });
+                    geocoder.getAddress(new qq.maps.LatLng(res.latitude, res.longitude));
+                },
+                cancel: function (res) {
+                    alert('用户拒绝授权获取地理位置');
+                }
+            });
+        });
+
     },"JSON")
 </script>
 {/block}
@@ -123,24 +156,31 @@
         <div class="searchCondition">
             <ul>
                 <li class="choiceArea">
-                    <p>所在省份</p>
+                    {php}
+                        $prov=input('province');
+                        $city=input('city');
+                        $district=input('district');
+                        $p=str_replace('省','',$prov);
+                        $c=str_replace('市','',$city);
+                    {/php}
+                    <p>{$p}</p>
                     <select name="province"  onchange="loadRegion('province',2,'city','getAddrs')" id="province">
                         {volist name="province" id="vo"}
-                        <option value="{$vo.id}" >{$vo.name}</option>
+                        <option value="{$vo.id}" {if condition="$p eq $vo['name']"}selected{/if}>{$vo.name}</option>
                         {/volist}
                     </select>
                     <img src="__HOME__/img/circle.png" class="selected circle"/>
                     <img src="__HOME__/img/right.png" />
                 </li>
-                <li class="choiceArea">
-                    <p>所在城市</p>
+                <li class="choiceArea citys">
+                    <p>{$c}</p>
                     <select name="city" onchange="loadRegion('city',3,'area','getAddrs')" id="city">
                     </select>
                     <img src="__HOME__/img/circle.png" class="circle" />
                     <img src="__HOME__/img/right.png" />
                 </li>
-                <li class="choiceArea">
-                    <p>所在县区</p>
+                <li class="choiceArea area">
+                    <p>{$district}</p>
                     <select name="area" id="area">
                     </select>
                     <img src="__HOME__/img/circle.png" class="circle" />
@@ -149,42 +189,65 @@
             </ul>
         </div>
         <div class="searchBtn" onclick="search()">
+            <input type="hidden" name="" id="lats" value="">
+            <input type="hidden" name="" id="lags" value="">
+            <input type="hidden" name="" id="cy" value="{$c}">
             <button>查找</button>
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    wx.ready(function () {
-        wx.checkJsApi({
-            jsApiList: [
-                'getLocation'
-            ],
-            success: function (res) {
-                if (res.checkResult.getLocation == false) {
-                    alert('你的微信版本太低，不支持微信JS接口，请升级到最新的微信版本！');
-                    return;
-                }
-            }
-        });
-        wx.getLocation({
-            success: function (res) {
-                console.log(res);
-                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-                var speed = res.speed; // 速度，以米/每秒计
-                var accuracy = res.accuracy; // 位置精度
-            },
-            cancel: function (res) {
-                alert('用户拒绝授权获取地理位置');
-            }
-        });
-    });
-</script>
+
 
 {/block}
 
 {block name="footer"}
 {include file="common/footer" /}
-<script type="text/javascript" src="__HOME__/js/webShopList.js" ></script>
+
+<script type="text/javascript">
+
+    function loadRegion(sel,type_id,selName,url,oldName){
+        jQuery("#"+selName+" option").each(function(){
+            jQuery(this).remove();
+        });
+        jQuery("<option value=0>请选择</option>").appendTo(jQuery("#"+selName));
+        if(jQuery("#"+sel).val()==0){
+            return;
+        }
+
+        jQuery.getJSON(link+url,{pid:jQuery("#"+sel).val(),type:type_id},
+                function(data){
+                    if(data){
+                        jQuery.each(data,function(idx,item){
+                            if(item.name==oldName){
+                                jQuery('<option value="'+item.id+'" selected="selected">'+item.name+'</option>').appendTo(jQuery("#"+selName));
+                            }else{
+                                jQuery("<option value="+item.id+">"+item.name+"</option>").appendTo(jQuery("#"+selName));
+                            }
+                        });
+                    }else{
+                        jQuery("<option value='0'>请选择</option>").appendTo(jQuery("#"+selName));
+                    }
+                }
+        );
+    }
+    var ct = $('.citys p').text();
+    var dt = $('.area p').text();
+    setTimeout(function(){
+        loadRegion('province',2,'city','getAddrs',ct);
+    },300);
+    setTimeout(function(){
+        loadRegion('city',3,'area','getAddrs',dt);
+    },500);
+
+    function search(){
+        var cy = $('#cy').val();
+        var lats = $('#lats').val();
+        var longs = $('#lags').val();
+        var area = $('#area').val();
+        window.location.href='{:url("index/webShop")}?lats='+lats+'&longs='+longs+'&city='+cy+'&region='+area;
+    }
+
+</script>
+<script type="text/javascript" src="__HOME__/js/webShopList.js?v=1" ></script>
 {/block}
 

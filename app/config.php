@@ -148,6 +148,7 @@ return [
         '__STATIC__' =>__PUBLIC__.'/static',
         '__ADMIN__'    => __PUBLIC__.'/static/admin',
         '__HOME__'     => __PUBLIC__.'/static/home',
+        '__USER__'     => __PUBLIC__.'/static/user',
     ],
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl'  => THINK_PATH . 'tpl' . DS . 'dispatch_jump.tpl',

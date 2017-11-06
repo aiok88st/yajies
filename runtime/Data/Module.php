@@ -112,5 +112,19 @@ return array (
     'status' => 1,
     'template' => 'content/videoList',
   ),
+  21 => 
+  array (
+    'id' => 21,
+    'title' => '会员模型',
+    'name' => 'users',
+    'description' => '会员模型',
+    'type' => 1,
+    'issystem' => 0,
+    'listfields' => '*',
+    'setup' => NULL,
+    'listorder' => 0,
+    'status' => 1,
+    'template' => 'content/index',
+  ),
 );
 ?>

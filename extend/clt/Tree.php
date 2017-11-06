@@ -2,7 +2,7 @@
 namespace clt;
 class Tree {
     public $arr = array();
-    public $icon = array('│','├','└');
+    public $icon = array('&nbsp;&nbsp;','&nbsp;&nbsp;','&nbsp;&nbsp;');
     public $nbsp = "&nbsp;";
     public $ret = '';
     public $level = 0;

@@ -46,7 +46,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">门店地址</label>
             <div class="">
-                <select name="province" onchange="loadRegion('province',2,'city','{:url('getAddrs')}')" id="province" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+                <select name="province" onchange="loadRegion('province',2,'city','{:url('getAddrs')}','')" id="province" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
                     <!--<option selected>{$info.province}</option>-->
                     {volist name="province" id="vo"}
                     <option {if condition="$info['province'] eq $vo['id']"}selected="selected"{/if} value="{$vo.id}" >{$vo.name}</option>
@@ -54,13 +54,13 @@
                 </select>
             </div>
             <div class="">
-                <select name="city" onchange="loadRegion('city',3,'area','{:url('getAddrs')}')" id="city" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
-                    <option>{$info.city}</option>
+                <select name="city" onchange="loadRegion('city',3,'area','{:url('getAddrs')}','')" id="city" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
+
                 </select>
             </div>
             <div class="">
                 <select name="area" id="area" lay-ignore style="width: 8%;height: 36px;float: left;margin-right: 10px;border-color: #D2D2D2!important;">
-                    <option>{$info.area}</option>
+
                 </select>
             </div>
             <div class="layui-input-inline">
@@ -104,7 +104,6 @@
         if(jQuery("#"+sel).val()==0){
             return;
         }
-
         jQuery.getJSON(url,{pid:jQuery("#"+sel).val(),type:type_id},
             function(data){
                 if(data){
@@ -122,10 +121,12 @@
             }
         );
     }
-    loadRegion('province',2,'city',"{:url('getAddrs')}","{$info['city']}");
+    var ct = {$info['city']};
+    var dt = {$info['area']};
+    loadRegion('province',2,'city',"{:url('getAddrs')}",ct);
     setTimeout(function(){
-        loadRegion('city',3,'area',"{:url('getAddrs')}","{$info['area']}");
-    },500);
+        loadRegion('city',3,'area',"{:url('getAddrs')}",dt);
+    },300);
 
 </script>
 
@@ -225,6 +226,9 @@
                 images+=$(this).val()+';';
             });
             data.field.images = images;
+            data.field.city = $('#city').val();
+            data.field.area = $('#area').val();
+            console.log(data.field);
             $.post(url, data.field, function (res) {
                 if (res.code > 0) {
                     layer.msg(res.msg, {time: 1800, icon: 1}, function () {

@@ -5,7 +5,7 @@ return array (
     'id' => 172,
     'moduleid' => 2,
     'field' => 'status',
-    'name' => '首页推荐',
+    'name' => '热门问题',
     'tips' => '',
     'required' => 0,
     'minlength' => 0,
@@ -15,8 +15,8 @@ return array (
     'class' => 'status',
     'type' => 'radio',
     'setup' => 'array (
-  \'options\' => \'加入首页推荐|2
-取消首页推荐|1\',
+  \'options\' => \'加入热门问题|2
+取消热门问题|1\',
   \'fieldtype\' => \'varchar\',
   \'numbertype\' => \'1\',
   \'default\' => \'1\',
@@ -25,6 +25,29 @@ return array (
     'unpostgroup' => '',
     'listorder' => 0,
     'status' => 1,
+    'issystem' => 0,
+  ),
+  'thumb_s' => 
+  array (
+    'id' => 236,
+    'moduleid' => 2,
+    'field' => 'thumb_s',
+    'name' => '缩略图',
+    'tips' => '',
+    'required' => 0,
+    'minlength' => 0,
+    'maxlength' => 0,
+    'pattern' => 'defaul',
+    'errormsg' => '',
+    'class' => 'thumb_s',
+    'type' => 'image',
+    'setup' => 'array (
+  \'upload_allowext\' => \'jpg|jpeg|gif|png\',
+)',
+    'ispost' => 0,
+    'unpostgroup' => '',
+    'listorder' => 0,
+    'status' => 0,
     'issystem' => 0,
   ),
   'catid' => 

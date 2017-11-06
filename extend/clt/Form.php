@@ -109,7 +109,6 @@ class Form{
         $info['setup']=is_array($info['setup']) ? $info['setup'] : string2array($info['setup']);
         $field = $info['field'];
         $name = $info['name'];
-
         $info['setup']['ispassword'] ? $inputtext = 'password' : $inputtext = 'text';
         $action = ACTION_NAME;
         if($action=='add'){
@@ -122,6 +121,10 @@ class Form{
             $pattern='|'.$info['pattern'];
         }
         $parseStr   = '<input type="'.$inputtext.'" data-required="'.$info['required'].'" min="'.$info['minlength'].'" max="'.$info['maxlength'].'" errormsg="'.$info['errormsg'].'" title="'.$name.'" placeholder="请输入'.$name.'" lay-verify="defaul'.$pattern.'" class="'.$info['class'].' layui-input" name="'.$field.'" value="'.stripslashes($value).'" /> ';
+        if($name=='关键词'){
+            $parseStr .='</div>';
+            $parseStr .='<div class="layui-form-mid layui-word-aux red">多个关键词用空格隔开';
+        }
         if($info['required']==1){
             $parseStr .='</div>';
             $parseStr .='<div class="layui-form-mid layui-word-aux red">*必填';

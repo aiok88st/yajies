@@ -40,7 +40,7 @@ class Category extends Common
             $str .= "<td class='visible-lg visible-md'>\$modulename</td><td class='visible-lg visible-md'>\$dis</td>";
             $str .= "<td><input type='text' size='10' data-id='\$id' value='\$listorder' class='layui-input list_order'></td><td>\$str_manage</td></tr>";
             $tree = new Tree ($array);
-            $tree->icon = array('&nbsp;&nbsp;&nbsp;│  ', '&nbsp;&nbsp;&nbsp;├─ ', '&nbsp;&nbsp;&nbsp;└─ ');
+            $tree->icon = array('&nbsp;&nbsp;&nbsp;', '&nbsp;&nbsp;&nbsp;', '&nbsp;&nbsp;&nbsp;');
             $tree->nbsp = '&nbsp;&nbsp;&nbsp;';
             $categorys = $tree->get_tree(0, $str);
 

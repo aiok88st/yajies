@@ -8,5 +8,6 @@ return array (
   'team' => 6,
   'network' => 17,
   'video' => 19,
+  'users' => 21,
 );
 ?>

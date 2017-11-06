@@ -1,152 +1,300 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>雅洁售后网店</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-		<meta content="yes" name="apple-mobile-web-app-capable"/>
-	    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
-	    <meta content="telephone=no" name="format-detection"/>
-	    <link rel="stylesheet" href="css/swiper-3.4.2.min.css" />
-	    <link rel="stylesheet" href="css/reset.css" />
-	    <link rel="stylesheet" href="css/public.css" />
-	    <link rel="stylesheet" href="css/webShop.css" />	
-	    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-	    <script type="text/javascript" src="js/swiper-3.4.2.min.js" ></script>
-	    <script type="text/javascript" src="js/rem.js" ></script>
-	</head>
+{extend name="common/header" /}
+{block name="headers"}
+<title>售后网点</title>
+<link rel="stylesheet" href="__HOME__/css/swiper-3.4.2.min.css" />
+<link rel="stylesheet" href="__HOME__/css/webShop.css" />
+<script type="text/javascript" src="__HOME__/js/swiper-3.4.2.min.js" ></script>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="__HOME__/load/js/bemLoad.js?v=1" ></script>
+<script type="text/javascript">
+    var link = "http://archie.hengdikeji.com/yajie/index.php/home/Index/";
+    var load;
+    $(function(){
+        load = new bemLoad(200,0.75);
+    });
+    var area = {$area};
+    if(area.length==0){
+        setTimeout(ChangeTime(), 1000);
+    }
+    function ChangeTime(){
+        var time;
+        time = $("#time").text();
+        time = parseInt(time);
+        time--;
+        if (time <= 0) {
+            window.location.href="{:url('home/index/webShop')}?city="+'{$city}'+"&region="+'{$pid}'+"&lats="+'{$lats}'+"&longs="+'{$longs}';
+        }else{
+            $("#time").text(time);
+            setTimeout(ChangeTime, 1000);
+        }
+    }
+
+    $.get(window.link+'getJs',function(res){
+        wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId:res.appId, // 必填，公众号的唯一标识
+            timestamp: res.timestamp, // 必填，生成签名的时间戳
+            nonceStr:res.nonceStr, // 必填，生成签名的随机串
+            signature:res.signature,// 必填，签名，见附录1
+            jsApiList: ['openLocation','getLocation'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+        wx.ready(function () {
+            wx.getLocation({
+                success: function (res) {
+                    var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                    var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                    var geocoder = new qq.maps.Geocoder({
+                        complete: function (result) {   //解析成功的回调函数
+                            var address = result.detail.addressComponents;  //获取详细地址信息
+                            {if condition="!input('region')"}
+                            window.location.href='{:url("index/getRegion")}?province='+address.province + '&city='+address.city+'&district='+address.district+'&lats='+latitude+'&longs='+longitude;
+                            {else/}
+                            load.close();
+                            {/if}
+                        }
+                    });
+
+                    geocoder.getAddress(new qq.maps.LatLng(res.latitude, res.longitude));
+                },
+                cancel: function (res) {
+                    alert('用户拒绝授权获取地理位置');
+                }
+            });
+        })
+
+    },"JSON");
+
+
+</script>
+{/block}
+{block name="main"}
+
 	<body>
 		<div id="webShop">
 			<!--导航栏-->
-			<div id="head">
+			<div id="head" style="z-index: 100">
 				<div class="hleft floatl">
-					<a href="###">佛山</a>
+					<a href="{:url('home/index/shopList')}">{$city}</a>
 				</div>
 				<div class="hmiddle floatl">
 					<p>附近网点</p>
 				</div>
-				<div class="hright floatl">
-					<a href="###">列表</a>
+				<div class="hright floatl" onclick="getList()" id="lit">
+					<a href="javascript:;">列表</a>
 					<div class="clearr"></div>
 				</div>
+                <div class="hright floatl" style="display: none;" id="maps" onclick="goList()">
+                    <a href="javascript:;">地图</a>
+                    <div class="clearr"></div>
+                </div>
 				<div class="clearl"></div>
 			</div>
+
 			<div id="map">
-				<p>sorry，网络出错了！！！</p>
+                <div id="container" style="height: 100%;width:100%;margin: auto;"></div>
 			</div>
-			<div class="shopAddress" >
-				<!--网点-->
-				<div class="swiper-container" style="display: none;">
-					<div class="swiper-wrapper">
-						<div class="swiper-slide">
-							<div class="addressBox">
-								<div class="addressShow">
-									<ul>
-										<li>
-											<p>1.佛山国美雅洁维修有限公司</p>
-										</li>
-										<li>
-											<p>佛山新一城广场五楼售后部</p>
-										</li>
-									</ul>
-								</div>
-								<div class="addressMethod">
-									<div class="go floatl">
-										<a href="###">到这去</a>
-									</div>
-									<div class="phone floatl">
-										<a href="###">打电话</a>
-									</div>
-									<div class="clearl"></div>
-								</div>
-							</div>
-						</div>
-						<div class="swiper-slide">
-							<div class="addressBox">
-								<div class="addressShow">
-									<ul>
-										<li>
-											<p>1.佛山国美雅洁维修有限公司</p>
-										</li>
-										<li>
-											<p>佛山新一城广场五楼售后部</p>
-										</li>
-									</ul>
-								</div>
-								<div class="addressMethod">
-									<div class="go floatl">
-										<a href="###">到这去</a>
-									</div>
-									<div class="phone floatl">
-										<a href="###">打电话</a>
-									</div>
-									<div class="clearl"></div>
-								</div>
-							</div>
-						</div>
-						<div class="swiper-slide">
-							<div class="addressBox">
-								<div class="addressShow">
-									<ul>
-										<li>
-											<p>1.佛山国美雅洁维修有限公司</p>
-										</li>
-										<li>
-											<p>佛山新一城广场五楼售后部</p>
-										</li>
-									</ul>
-								</div>
-								<div class="addressMethod">
-									<div class="go floatl">
-										<a href="###">到这去</a>
-									</div>
-									<div class="phone floatl">
-										<a href="###">打电话</a>
-									</div>
-									<div class="clearl"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+			<div class="shopAddress" id="listOne">
+                
+                {empty name="areas"}
 				<!--网点搜索中-->
-				<div class="searchWebShop">
+				<div class="searchWebShop" id="search-z" >
 					<div class="addressBox">
 						<ul>
 							<li>
-								<img src="img/search.png" style="width: 25%;"/>
+								<img src="__HOME__/img/search.png" style="width: 25%;"/>
 							</li>
 							<li>
 								<p>您附近区域没有售后网点</p>
 							</li>
-							<li>
-								<p>正在搜索其他地区</p>
+							<li id="search_next">
+								<p><span id="time">5</span>秒搜索其他地区</p>
 							</li>
 						</ul>
 					</div>
 				</div>
-				<!--没有网点-->
-				<div class="searchWebShop"  style="display: none;">
-					<div class="addressBox">
-						<ul>
-							<li>
-								<img src="img/laugh.png" />
-							</li>
-							<li>
-								<p>您所在的省份没有售后网点</p>
-							</li>
-							<li>
-								<p>感谢关注</p>
-							</li>
-						</ul>
-					</div>
-				</div>
+                {else/}
+
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                      {volist name="areas" id="vo"}
+                        {php}
+                            $latlng=explode(',',$vo['location']);
+                        {/php}
+                        <div class="swiper-slide items" date-lat="{$latlng[0]}" date-lng="{$latlng[1]}">
+                            <div class="addressBox">
+                                <div class="addressShow">
+                                    <ul>
+                                        <li>
+                                            <p>{$vo.title}</p>
+                                        </li>
+                                        <li>
+                                            <p style="float: left;">{$vo.addr}</p>
+                                            <p style="float: right;">距离：{$vo.distance}km</p>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="addressMethod">
+                                    <div class="go floatl">
+                                        <a href="javascript:;" onclick="gomap({$latlng[0]},{$latlng[1]},'{$vo.title}','{$vo.province}{$vo.city}{$vo.area}{$vo.addr}')">到这去</a>
+                                    </div>
+                                    <div class="phone floatl">
+                                        <a href="tel:{$vo.tel}">打电话</a>
+                                    </div>
+                                    <div class="clearl"></div>
+                                </div>
+                            </div>
+                        </div>
+                       {/volist}
+                    </div>
+                </div>
+
+                {/empty}
 			</div>
+            <div class="shopList" id="list" style="display: none;margin-top: 15%;">
+            {empty name="areas"}
+            <!--没有网点-->
+                <div class="searchWebShop">
+                    <div class="addressBox">
+                        <ul>
+                            <li>
+                                <img src="__HOME__/img/laugh.png" />
+                            </li>
+                            <li>
+                                <p>您所在的省份没有售后网点</p>
+                            </li>
+                            <li>
+                                <p>感谢关注</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                {else/}
+                <!--网点-->
+
+            {volist name="areas" id="v1"}
+                        {php}
+                            $latlng1=explode(',',$v1['location']);
+                        {/php}
+                <div class="addressBox" style="margin-bottom: 3%;">
+                    <div class="addressShow">
+                        <ul>
+                            <li>
+                                <p>{$v1.title}</p>
+                            </li>
+                            <li>
+                                <p style="float: left;">{$v1.addr}</p>
+                                <p style="float: right;">距离：{$v1.distance}km</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="addressMethod">
+                        <div class="go floatl">
+                            <a href="javascript:;" onclick="gomap({$latlng1[0]},{$latlng1[1]},'{$v1.title}','{$v1.province}{$v1.city}{$v1.area}{$v1.addr}')">到这去</a>
+                        </div>
+                        <div class="phone floatl">
+                            <a href="tel:{$v1.tel}">打电话</a>
+                        </div>
+                        <div class="clearl"></div>
+                    </div>
+                </div>
+                {/volist}
+                {/empty}
+                
+            </div>
 		</div>
 		<script>
-			var mySwiper = new Swiper('.swiper-container', {
+			var mySwiperX = new Swiper('.swiper-container', {
 				direction : 'horizontal',
+                loop:true,
+                onSlideChangeEnd:function(sw){
+                    $sw=$('.items').eq(sw.activeIndex);
+                    var thisLat=$sw.attr('date-lat');
+                    var thisLng=$sw.attr('date-lng');
+                    init(thisLat,thisLng);
+
+                }
 			});
+
+            var geocoder,map,marker = null;
+
+           function init (Lat,Lng) {
+                var center = new qq.maps.LatLng(Lat,Lng);//23.134751, 113.339327
+                map = new qq.maps.Map(document.getElementById('container'),{
+                    center: center,
+                    zoom: 15
+                });
+                if(area.length>0){
+                    for(item in area){
+                        var LatLngs=area[item].location.split(',');
+                        var positions = new qq.maps.LatLng(LatLngs[0],LatLngs[1]);
+                        var markers = new qq.maps.Marker({
+                            position: positions,
+                            map: map
+                        });
+                        qq.maps.event.addListener(markers, 'click', function(event) {
+                            var lng=event.latLng.getLng();
+                            var lat=event.latLng.getLat();
+                            $('.items').each(function(){
+                                var thisLat=$(this).attr('date-lat');
+                                var thisLng=$(this).attr('date-lng');
+                                if(thisLat==lat && lng==thisLng){
+                                    var index=$(this).index();
+                                    mySwiperX.slideTo(index);
+                                }
+                            })
+                        });
+                    }
+                }
+            }
+            
+            if(area.length==0){
+                init(23.134751, 113.339327);
+            }else{
+                var LatLng=area[0].location.split(',');
+                init(LatLng[0],LatLng[1]);
+            }
+            
+
+
+            function getList(){
+                $("#map").hide();
+                $("#list").show();
+                $("#search-z").hide();
+                $("#listOne").hide();
+                $("#lit").hide();
+                $("#maps").show();
+            }
+
+            function goList(){
+                $("#map").show();
+                $("#list").hide();
+                $("#search-z").show();
+                $("#listOne").show();
+                $("#lit").show();
+                $("#maps").hide();
+            }
+
+            //导航
+            function gomap(lat,lng,title,addres){
+                wx.ready(function () {
+                    wx.openLocation({
+                        latitude: lat,
+                        longitude: lng,
+                        name: title,
+                        address:addres,
+                        scale: 14,
+                        infoUrl: 'http://weixin.qq.com'
+                    });
+                });
+            }
+
 		</script>
-	</body>
-</html>
+
+{/block}
+
+{block name="footer"}
+{include file="common/footer" /}
+
+{/block}

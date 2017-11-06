@@ -2,6 +2,7 @@
 namespace app\home\controller;
 use think\Controller;
 use think\Exception;
+use think\Db;
 class Fater extends Controller{
     protected $appid;
     protected $appsecret;
@@ -51,6 +52,18 @@ class Fater extends Controller{
             }
         }
         return ['code'=>1];
+    }
+
+    public function getNetwork($map,$order){
+        $list=Db::table(config('database.prefix').'network')->alias('a')
+            ->join(config('database.prefix').'region ag','a.province = ag.id','left')
+            ->join(config('database.prefix').'region r','a.city = r.id','left')
+            ->join(config('database.prefix').'region rs','a.area = rs.id','left')
+            ->field('a.*,ag.name as province,r.name as city,rs.name as area')
+            ->where($map)
+            ->order($order)
+            ->select();
+        return $list;
     }
 
 }

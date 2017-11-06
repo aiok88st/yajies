@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:58:"F:\wamp\www\yajie/app/admin\view\networks\networkList.html";i:1509443434;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1509507433;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:55:"F:\wamp\www\yajie/app/admin\view\content\videoList.html";i:1509962322;s:49:"F:\wamp\www\yajie/app/admin\view\common\head.html";i:1509507433;s:49:"F:\wamp\www\yajie/app/admin\view\common\foot.html";i:1507509539;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,6 +26,13 @@
         <button class="layui-btn" id="search" data-type="reload"><?php echo lang('search'); ?></button>
         <a href="<?php echo url('index',['catid'=>input('catid')]); ?>" class="layui-btn">显示全部</a>
         <button type="button" class="layui-btn layui-btn-danger" id="delAll">批量删除</button>
+        <div class="layui-inline" style="margin-left: 10px;">
+            <label>分类：</label>
+            <select name="catid" id="catList" lay-filter="catList" lay-verify="required" style="height: 38px;padding-left: 5px;padding-right: 100px;">
+                <option value='0'>- - 全部 - -</option>
+                <?php echo $catList; ?>
+            </select>
+        </div>
         <a href="<?php echo url('add',array('catid'=>input('catid'))); ?>" class="layui-btn" style="float:right;margin-right: 15px;"><?php echo lang('add'); ?></a>
         <div style="clear: both;"></div>
     </div>
@@ -42,7 +49,7 @@
     {{# if(d.thumb){ }}<img src="__ADMIN__/images/image.gif" onmouseover="layer.tips('<img src=__PUBLIC__/{{d.thumb}}>',this,{tips: [1, '#fff']});" onmouseout="layer.closeAll();">{{# } }}
 </script>
 <script type="text/html" id="action">
-    <a href="<?php echo url('edit'); ?>?id={{d.id}}" class="layui-btn layui-btn-mini">编辑</a>
+    <a href="<?php echo url('edit'); ?>?id={{d.id}}&catid={{d.catid}}" class="layui-btn layui-btn-mini">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
 </script>
 <script>
@@ -58,12 +65,9 @@
             cols: [[
                 {checkbox: true, fixed: true},
                 {field: 'id', title: '<?php echo lang("id"); ?>', width: 80, fixed: true},
-                {field: 'title', title: '门店名', width: 300},
-                {field: 'province', title: '省', width: 80},
-                {field: 'city', title: '市', width: 80},
-                {field: 'area', title: '区', width: 80},
-                {field: 'addr', title: '地址', width: 200},
-                {field: 'tel', title: '门店电话', width: 200},
+                {field: 'title', title: '标题', width: 400, templet: '#title'},
+                {field: 'link', title: '视频链接地址', width: 500},
+                {field: 'hits', title: '浏览量', width: 120},
                 {field: 'createtime', title: '<?php echo lang("add"); ?><?php echo lang("time"); ?>', width: 180},
                 {field: 'listorder', align: 'center', title: '<?php echo lang("order"); ?>', width: 120, templet: '#order'},
                 {width: 200, align: 'center', toolbar: '#action',title:'操作'}
@@ -79,6 +83,13 @@
             }
             tableIn.reload({
                 where: {key: key,catid:'<?php echo input("catid"); ?>'}
+            });
+        });
+        //切换分类
+        $("#catList").on('change',function(){
+            var catid = $("#catList").val();
+             tableIn.reload({
+                where: {catid:catid}
             });
         });
         $('body').on('blur','.list_order',function() {

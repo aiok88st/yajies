@@ -7,14 +7,17 @@ class EmptyController extends Common{
     protected  $dao,$fields;
     public function _initialize()
     {
+
         parent::_initialize();
         $this->moduleid = $this->mod[MODULE_NAME];
         $this->dao = db(MODULE_NAME);
         $fields = F($this->moduleid.'_Field');
+
         foreach($fields as $key => $res){
             $res['setup']=string2array($res['setup']);
             $this->fields[$key]=$res;
         }
+    
         unset($fields);
         unset($res);
         $this->assign ('fields',$this->fields);
@@ -51,7 +54,9 @@ class EmptyController extends Common{
                     $map['catid']=array('in',$catid);
                 }
             }
+
             if($modelname == 'network'){
+                $order = "listorder asc";
                 $list = $this->getNetwork($map,$order,$pageSize,$page);
             }else{
                 $list = $model
@@ -73,6 +78,14 @@ class EmptyController extends Common{
             $rsult['rel'] = 1;
             return $rsult;
         }else{
+            if($modelname == 'article'){
+                $catList = getTree2('category',4,1,0);
+                $this->assign('catList',$catList);
+            }
+            if($modelname == 'video'){
+                $catList = getTree2('category',1,1,0);
+                $this->assign('catList',$catList);
+            }
             $module = db('module');
             $tem = $module->where('name',$modelname)->field('template')->find();
             return $this->fetch("{$tem['template']}");
@@ -123,6 +136,7 @@ class EmptyController extends Common{
         $model = $this->dao;
         $fields = $this->fields;
         $data = $this->checkfield($fields,input('post.'));
+
         if($data['code']=="0"){
             $result['msg'] = $data['msg'];
             $result['code'] = 0;
@@ -274,7 +288,6 @@ class EmptyController extends Common{
         $model = $this->dao;
         $fields = $this->fields;
         $data = $this->checkfield($fields,input('post.'));
-
         if(isset($data['code']) && $data['code']==0){
             return $data;
         }
@@ -414,14 +427,11 @@ class EmptyController extends Common{
 
     //省市区三级联动
     public function getAddrs(){
-//        $region = db('region');
-//        $map['pid']=input('pid');
-//        $map['type']=input('type');
-//        $list=$region->where($map)->select();
-//        echo json_encode($list);
         $list = getLocation('region',input('pid'),input('type'));
         echo json_encode($list);
     }
+
+
 
 
 }
